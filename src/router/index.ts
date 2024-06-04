@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import routes from 'virtual:generated-pages' // Use the correct alias
+import routes from 'virtual:generated-pages'
 
 const router = createRouter({
   history: createWebHistory(),
