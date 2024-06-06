@@ -1,8 +1,8 @@
 <template>
   <div>
     <h1>Index Page</h1>
-    <router-link to="/home">
-      Go to Home
+    <router-link to="/game">
+      Go to Game
     </router-link>
   </div>
 </template>

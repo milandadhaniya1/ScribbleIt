@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "module": "nodenext",
+    "module": "ESNext",
+    "moduleResolution": "node",
     "lib": ["es2015", "dom"],
     "skipLibCheck": true,
+    "resolveJsonModule": true,
 
     /* Linting */
     "strict": true,

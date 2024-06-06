@@ -6,7 +6,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-let users = [];
+let players = [];
 
 app.use(json());
 
@@ -16,8 +16,8 @@ app.get('', (req, res) => {
 });
 app.post('/login', (req, res) => {
   const { username } = req.body;
-  if (!users.includes(username)) {
-    users.push(username);
+  if (!players.includes(username)) {
+    players.push(username);
     res.status(200).json({ message: 'Login successful', username });
   } else {
     res.status(400).json({ message: 'Username already exists' });
@@ -25,10 +25,10 @@ app.post('/login', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  console.log('New user connected');
+  console.log('New player connected');
 
   socket.on('disconnect', () => {
-    console.log('User disconnected');
+    console.log('Player disconnected');
   });
 
   // Drawing collaboration features
