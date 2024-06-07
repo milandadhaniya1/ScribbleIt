@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Pencil from '@/src/components/icons/pencil.vue';
+import Icon from '@/src/components/icons/index.vue';
 </script>
 
 <template>
@@ -29,7 +29,7 @@ import Pencil from '@/src/components/icons/pencil.vue';
           90 points
         </div>
         <div class="player-icons">
-          <Pencil class="icon" />
+          <Icon name="pencil" />
         </div>
       </div>
 
