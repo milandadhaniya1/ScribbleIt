@@ -40,7 +40,7 @@
       <input
         type="text"
         placeholder="Type your guess here"
-        class="input input-bordered input-sm w-full max-w-xs"
+        class="input input-bordered input-sm w-full"
       >
     </div>
   </div>

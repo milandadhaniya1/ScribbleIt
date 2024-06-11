@@ -1,7 +1,7 @@
 <script setup lang="ts">
-  import PlayersWrapper from '@/src/components/PlayersWrapper.vue'
-  import GameWrapper from '@/src/components/GameWrapper.vue'
-  import ChatWrapper from '@/src/components/ChatWrapper.vue'
+  import PlayersWrapper from '@/src/components/PlayersWrapper.vue';
+  import GameWrapper from '@/src/components/GameWrapper.vue';
+  import ChatWrapper from '@/src/components/ChatWrapper.vue';
 </script>
 
 <template>
