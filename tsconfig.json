@@ -1,11 +1,16 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "preserve",
+    "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "node",
-    "lib": ["es2015", "dom"],
+    "moduleResolution": "Node",
+    "lib": ["ESNext", "DOM"],
+    "types": ["node"],
     "skipLibCheck": true,
+    "allowJs": true,
     "resolveJsonModule": true,
+    "noEmit": true,
 
     /* Linting */
     "strict": true,
@@ -13,11 +18,13 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.vue"],
+  "exclude": ["node_modules", "dist"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

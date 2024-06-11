@@ -43,7 +43,10 @@ const iconClass = computed(() => {
 </script>
 
 <template>
-  <component :is="iconComponent" :class="iconClass" />
+  <component
+    :is="iconComponent"
+    :class="iconClass"
+  />
 </template>
 
 <style scoped>
