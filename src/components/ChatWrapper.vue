@@ -1,4 +1,7 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import EmojiPicker from './EmojiPicker.vue';
+
+</script>
 
 <template>
   <div class="chat-wrapper flex flex-col h-full">
@@ -37,11 +40,7 @@
       </div>
     </div>
     <div class="chat-box mt-auto">
-      <input
-        type="text"
-        placeholder="Type your guess here"
-        class="input input-bordered input-sm w-full"
-      >
+      <EmojiPicker />
     </div>
   </div>
 </template>

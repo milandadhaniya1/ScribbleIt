@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@popperjs/core':
+    specifier: ^2.11.8
+    version: 2.11.8
   express:
     specifier: ^4.19.2
     version: 4.19.2
@@ -26,6 +29,9 @@ dependencies:
   vue-router:
     specifier: '4'
     version: 4.3.2(vue@3.4.21)
+  vue3-emoji-picker:
+    specifier: ^1.1.8
+    version: 1.1.8(typescript@5.2.2)
 
 devDependencies:
   '@eslint/js':
@@ -516,6 +522,10 @@ packages:
       debug: 4.3.4
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /@popperjs/core@2.11.8:
+    resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
     dev: false
 
   /@rollup/rollup-android-arm-eabi@4.17.2:
@@ -2204,6 +2214,10 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       safer-buffer: 2.1.2
+    dev: false
+
+  /idb@7.1.1:
+    resolution: {integrity: sha512-gchesWBzyvGHRO9W8tzUWFDycow5gwjvFKfyV9FF32Y7F50yZMp7mP+T2mJIWFx49zicqyC4uefHM17o6xKIVQ==}
     dev: false
 
   /ignore@5.3.1:
@@ -3908,6 +3922,17 @@ packages:
       semver: 7.6.2
       typescript: 5.2.2
     dev: true
+
+  /vue3-emoji-picker@1.1.8(typescript@5.2.2):
+    resolution: {integrity: sha512-k9tVHeQEBVLzVCLYAkFaI1nib3FJFQwdPhWD5khJkhks3ktg3g12z5wPGOSDpIuSLNtelRGvq1qdmZuJu5khfA==}
+    engines: {node: '>=16.0.0'}
+    dependencies:
+      '@popperjs/core': 2.11.8
+      idb: 7.1.1
+      vue: 3.4.21(typescript@5.2.2)
+    transitivePeerDependencies:
+      - typescript
+    dev: false
 
   /vue@3.4.21(typescript@5.2.2):
     resolution: {integrity: sha512-5hjyV/jLEIKD/jYl4cavMcnzKwjMKohureP8ejn3hhEjwhWIhWeuzL2kJAjzl/WyVsgPY56Sy4Z40C3lVshxXA==}
