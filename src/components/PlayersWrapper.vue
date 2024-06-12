@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Icon from '@/src/components/icons/index.vue';
+  import Icon from '@/src/components/icons/index.vue';
 </script>
 
 <template>
@@ -9,7 +9,9 @@ import Icon from '@/src/components/icons/index.vue';
   >
     <div class="players-list">
       <!-- Player 1 -->
-      <div class="player odd bg-gray-200 p-2 flex flex-row justify-between rounded-t-lg">
+      <div
+        class="player odd bg-gray-200 p-2 flex flex-row justify-between rounded-t-lg"
+      >
         <div class="player-name font-bold">
           Milan
         </div>
@@ -33,7 +35,9 @@ import Icon from '@/src/components/icons/index.vue';
         </div>
       </div>
 
-      <div class="player odd bg-gray-200 p-2 flex flex-row justify-between rounded-b-lg">
+      <div
+        class="player odd bg-gray-200 p-2 flex flex-row justify-between rounded-b-lg"
+      >
         <div class="player-name font-bold">
           Trishant
         </div>
@@ -49,8 +53,8 @@ import Icon from '@/src/components/icons/index.vue';
 </template>
 
 <style scoped>
-.icon {
-  height: 24px;
-  width: 24px;
-}
+  .icon {
+    height: 24px;
+    width: 24px;
+  }
 </style>

@@ -12,7 +12,15 @@ This template should help get you started developing with Vue 3 and TypeScript i
 # Used frameworks / libraries 
 ## Express.js
 ## Vue 3
+## Typescript
 ## Vite
-## daisyui
+## Daisyui
 ## Tailwind CSS
-## socket.io
+## Socket.io
+## vite-plugin-pages
+
+## Features covered
+### Auto routes
+### Emoji picker
+### Pm2 cluster
+### Linting
