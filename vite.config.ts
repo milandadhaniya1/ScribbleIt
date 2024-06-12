@@ -16,4 +16,5 @@ export default defineConfig({
       extensions: ['vue', 'ts']
     })
   ],
+  base: ''
 });

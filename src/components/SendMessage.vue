@@ -3,7 +3,8 @@
   import EmojiPicker from 'vue3-emoji-picker';
   import 'vue3-emoji-picker/css';
   import { createPopper } from '@popperjs/core';
-  import smileysPeople from '@/src/assets/smileys_people.svg';
+  import smileysPeopleIcon from '@/src/assets/smileys_people.svg';
+  import sendMessageIcon from '@/src/assets/send_message.svg';
 
   const emojiPickerInput = ref<string>('');
   const emojiPickerButton = ref<HTMLElement | null>(null);
@@ -42,6 +43,11 @@
     showEmojiPicker.value = false;
   };
 
+  const sendMessage = () => {
+    console.log(emojiPickerInput.value);
+    emojiPickerInput.value = '';
+  };
+
   onMounted(async () => {
     await nextTick();
     setupPopper();
@@ -58,8 +64,9 @@
       <input
         v-model="emojiPickerInput"
         type="text"
-        class="input-sm w-full"
+        class="w-full"
         placeholder="Type your guess here"
+        @keyup.enter="sendMessage"
       >
       <div class="input-picker-wrap flex items-center">
         <button
@@ -68,10 +75,19 @@
           @click="showEmojiPicker = !showEmojiPicker"
         >
           <img
-            :src="smileysPeople"
+            :src="smileysPeopleIcon"
             alt=""
             width="30"
             height="30"
+          >
+        </button>
+        <button type="button">
+          <img
+            :src="sendMessageIcon"
+            alt=""
+            width="30"
+            height="30"
+            @click="sendMessage"
           >
         </button>
         <EmojiPicker

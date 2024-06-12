@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import EmojiPicker from './EmojiPicker.vue';
+  import SendMessage from './SendMessage.vue';
 </script>
 
 <template>
@@ -39,7 +39,7 @@
       </div>
     </div>
     <div class="chat-box mt-auto">
-      <EmojiPicker />
+      <SendMessage />
     </div>
   </div>
 </template>
