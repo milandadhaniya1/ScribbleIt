@@ -1,53 +1,55 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref, nextTick } from 'vue';
-import EmojiPicker from 'vue3-emoji-picker';
-import 'vue3-emoji-picker/css';
-import { createPopper } from '@popperjs/core';
-import smileysPeople from '@/src/assets/smileys_people.svg';
+  import { onBeforeUnmount, onMounted, ref, nextTick } from 'vue';
+  import EmojiPicker from 'vue3-emoji-picker';
+  import 'vue3-emoji-picker/css';
+  import { createPopper } from '@popperjs/core';
+  import smileysPeople from '@/src/assets/smileys_people.svg';
 
-const emojiPickerInput = ref<string>('');
-const emojiPickerButton = ref<HTMLElement | null>(null);
-const showEmojiPicker = ref<boolean>(false);
-const picker = ref<HTMLElement | null>(null);
+  const emojiPickerInput = ref<string>('');
+  const emojiPickerButton = ref<HTMLElement | null>(null);
+  const showEmojiPicker = ref<boolean>(false);
+  const picker = ref<HTMLElement | null>(null);
 
-const clickListener = (event: MouseEvent) => {
-  const isOutside = !(event.target as HTMLElement)?.closest('.input-picker-wrap');
-  if (isOutside && showEmojiPicker.value) {
-    showEmojiPicker.value = false;
-  }
-};
+  const clickListener = (event: MouseEvent) => {
+    const isOutside = !(event.target as HTMLElement)?.closest(
+      '.input-picker-wrap',
+    );
+    if (isOutside && showEmojiPicker.value) {
+      showEmojiPicker.value = false;
+    }
+  };
 
-const setupPopper = () => {
-  let offset = 6;
-  if (emojiPickerButton.value && picker.value) {
-    createPopper(emojiPickerButton.value, picker.value, {
-      placement: 'bottom-end',
-      modifiers: [
-        {
-          name: 'offset',
-          options: {
-            offset: [0, offset],
+  const setupPopper = () => {
+    let offset = 6;
+    if (emojiPickerButton.value && picker.value) {
+      createPopper(emojiPickerButton.value, picker.value, {
+        placement: 'bottom-end',
+        modifiers: [
+          {
+            name: 'offset',
+            options: {
+              offset: [0, offset],
+            },
           },
-        },
-      ],
-    });
-  }
-  document.body.addEventListener('click', clickListener);
-};
+        ],
+      });
+    }
+    document.body.addEventListener('click', clickListener);
+  };
 
-const onSelectEmoji = (emoji: any) => {
-  emojiPickerInput.value += emoji.i;
-  showEmojiPicker.value = false;
-};
+  const onSelectEmoji = (emoji: any) => {
+    emojiPickerInput.value += emoji.i;
+    showEmojiPicker.value = false;
+  };
 
-onMounted(async () => {
-  await nextTick();
-  setupPopper();
-});
+  onMounted(async () => {
+    await nextTick();
+    setupPopper();
+  });
 
-onBeforeUnmount(() => {
-  document.body.removeEventListener('click', clickListener);
-});
+  onBeforeUnmount(() => {
+    document.body.removeEventListener('click', clickListener);
+  });
 </script>
 
 <template>
@@ -65,7 +67,7 @@ onBeforeUnmount(() => {
           ref="emojiPickerButton"
           @click="showEmojiPicker = !showEmojiPicker"
         >
-          <img :src="smileysPeople" alt="" width="30" height="30"/>
+          <img :src="smileysPeople" alt="" width="30" height="30" />
         </button>
         <EmojiPicker
           v-show="showEmojiPicker"
