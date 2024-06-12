@@ -37,7 +37,7 @@
     document.body.addEventListener('click', clickListener);
   };
 
-  const onSelectEmoji = (emoji: any) => {
+  const onSelectEmoji = (emoji: { i: string; }) => {
     emojiPickerInput.value += emoji.i;
     showEmojiPicker.value = false;
   };
@@ -60,14 +60,19 @@
         type="text"
         class="input-sm w-full"
         placeholder="Type your guess here"
-      />
+      >
       <div class="input-picker-wrap flex items-center">
         <button
-          type="button"
           ref="emojiPickerButton"
+          type="button"
           @click="showEmojiPicker = !showEmojiPicker"
         >
-          <img :src="smileysPeople" alt="" width="30" height="30" />
+          <img
+            :src="smileysPeople"
+            alt=""
+            width="30"
+            height="30"
+          >
         </button>
         <EmojiPicker
           v-show="showEmojiPicker"

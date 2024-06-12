@@ -20,5 +20,7 @@ This template should help get you started developing with Vue 3 and TypeScript i
 ## vite-plugin-pages
 
 ## Features covered
-### dynamic routes
-### 
+### Auto routes
+### Emoji picker
+### Pm2 cluster
+### Linting

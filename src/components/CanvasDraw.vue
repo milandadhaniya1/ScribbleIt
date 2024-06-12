@@ -44,7 +44,10 @@
 </script>
 
 <template>
-  <div ref="container" class="canvas-container">
+  <div
+    ref="container"
+    class="canvas-container"
+  >
     <canvas
       ref="canvas"
       class="border"
