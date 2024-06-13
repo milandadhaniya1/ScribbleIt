@@ -3,8 +3,11 @@
   import EmojiPicker from 'vue3-emoji-picker';
   import 'vue3-emoji-picker/css';
   import { createPopper } from '@popperjs/core';
-  import smileysPeopleIcon from '@/src/assets/smileys_people.svg';
-  import sendMessageIcon from '@/src/assets/send_message.svg';
+  import smileysPeopleIcon from '@src/assets/smileys_people.svg';
+  import sendMessageIcon from '@src/assets/send_message.svg';
+  import { useMessageStore } from '@store/message';
+
+  const messageStore = useMessageStore();
 
   const emojiPickerInput = ref<string>('');
   const emojiPickerButton = ref<HTMLElement | null>(null);
@@ -44,8 +47,10 @@
   };
 
   const sendMessage = () => {
-    console.log(emojiPickerInput.value);
-    emojiPickerInput.value = '';
+    if (emojiPickerInput.value && (emojiPickerInput.value || '').trim() !== '') {
+      messageStore.sendMessage(emojiPickerInput.value);
+      emojiPickerInput.value = '';
+    }
   };
 
   onMounted(async () => {

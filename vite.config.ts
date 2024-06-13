@@ -6,7 +6,9 @@ import path from 'path';
 export default defineConfig({
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, '')
+      '@src': path.resolve(__dirname, './src'),
+      '@store': path.resolve(__dirname, './store'),
+      '@server': path.resolve(__dirname, './server')
     },
   },
   plugins: [
@@ -15,6 +17,5 @@ export default defineConfig({
       dirs: 'src/pages',
       extensions: ['vue', 'ts']
     })
-  ],
-  base: ''
+  ]
 });
