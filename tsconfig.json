@@ -21,7 +21,9 @@
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@src/*": ["./src/*"],
+      "@store/*": ["./store/*"],
+      "@server/*": ["./server/*"],
     }
   },
   "include": ["src/**/*.ts", "src/**/*.vue"],

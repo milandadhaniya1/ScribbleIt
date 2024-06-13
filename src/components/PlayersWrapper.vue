@@ -1,5 +1,10 @@
 <script setup lang="ts">
-  import Icon from '@/src/components/icons/index.vue';
+  import { storeToRefs } from 'pinia';
+  import Icon from '@src/components/icons/index.vue';
+  import { useUsersStore } from '@store/user';
+
+  const userStore = useUsersStore();
+  const { allUsers } = storeToRefs(userStore);
 </script>
 
 <template>
@@ -8,46 +13,35 @@
     class="grid"
   >
     <div class="players-list">
-      <!-- Player 1 -->
-      <div
-        class="player odd bg-gray-200 p-2 flex flex-row justify-between rounded-t-lg"
+      <template
+        v-for="(user, index) in allUsers.list"
+        :key="user.id"
       >
-        <div class="player-name font-bold">
-          Milan
+        <div
+          class="player p-2 flex flex-row justify-between"
+          :class="{
+            'bg-gray-100': index % 2 === 1,
+            'bg-gray-200': index % 2 === 0,
+            'rounded-t-lg': index === 0,
+            'rounded-b-lg': index === ((allUsers.list || []).length - 1)
+          }"
+        >
+          <div
+            class="player-name font-bold"
+          >
+            {{ user.name }}
+          </div>
+          <div class="player-score text-sm">
+            {{ user.points }} points
+          </div>
+          <div class="player-icons">
+            <Icon
+              v-if="user.isTyping"
+              name="pencil"
+            />
+          </div>
         </div>
-        <div class="player-score text-sm">
-          100 points
-        </div>
-        <div class="player-icons">
-          <!-- Writing -->
-        </div>
-      </div>
-
-      <div class="player odd bg-gray-100 p-2 flex flex-row justify-between">
-        <div class="player-name font-bold">
-          Nirmal
-        </div>
-        <div class="player-score text-sm">
-          90 points
-        </div>
-        <div class="player-icons">
-          <Icon name="pencil" />
-        </div>
-      </div>
-
-      <div
-        class="player odd bg-gray-200 p-2 flex flex-row justify-between rounded-b-lg"
-      >
-        <div class="player-name font-bold">
-          Trishant
-        </div>
-        <div class="player-score text-sm">
-          80 points
-        </div>
-        <div class="player-icons">
-          <!-- Writing -->
-        </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>

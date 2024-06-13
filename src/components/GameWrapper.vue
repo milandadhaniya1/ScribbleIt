@@ -1,7 +1,7 @@
 <script setup lang="ts">
   // import { storeToRefs } from 'pinia';
-  import CanvasDraw from '@/src/components/CanvasDraw.vue';
-  import { useSelectedWordsStore } from '@/store/game';
+  import CanvasDraw from '@src/components/CanvasDraw.vue';
+  import { useSelectedWordsStore } from '@store/game';
 
   const selectedWordsStore = useSelectedWordsStore();
   // const { selectedWord } = storeToRefs(selectedWordsStore);
