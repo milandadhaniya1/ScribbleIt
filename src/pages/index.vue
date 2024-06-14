@@ -1,4 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+
+const startGame = () => {
+  
+};
+</script>
 
 <template>
   <div>
