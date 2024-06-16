@@ -1,66 +1,69 @@
 <script setup lang="ts">
-  import { onBeforeUnmount, onMounted, ref, nextTick } from 'vue';
-  import EmojiPicker from 'vue3-emoji-picker';
-  import 'vue3-emoji-picker/css';
-  import { createPopper } from '@popperjs/core';
-  import smileysPeopleIcon from '@src/assets/smileys_people.svg';
-  import sendMessageIcon from '@src/assets/send_message.svg';
-  import { useMessageStore } from '@store/message';
+import { onBeforeUnmount, onMounted, ref, nextTick } from 'vue';
+import EmojiPicker from 'vue3-emoji-picker';
+import 'vue3-emoji-picker/css';
+import { createPopper } from '@popperjs/core';
+import smileysPeopleIcon from '@src/assets/smileys_people.svg';
+import sendMessageIcon from '@src/assets/send_message.svg';
+import { useMessageStore } from '@store/message';
 
-  const messageStore = useMessageStore();
+const messageStore = useMessageStore();
 
-  const emojiPickerInput = ref<string>('');
-  const emojiPickerButton = ref<HTMLElement | null>(null);
-  const showEmojiPicker = ref<boolean>(false);
-  const picker = ref<HTMLElement | null>(null);
+const emojiPickerInput = ref<string>('');
+const emojiPickerButton = ref<HTMLElement | null>(null);
+const showEmojiPicker = ref<boolean>(false);
+const picker = ref<HTMLElement | null>(null);
 
-  const clickListener = (event: MouseEvent) => {
-    const isOutside = !(event.target as HTMLElement)?.closest(
-      '.input-picker-wrap',
-    );
-    if (isOutside && showEmojiPicker.value) {
-      showEmojiPicker.value = false;
-    }
-  };
+const emit = defineEmits(["messageAdded"]);
 
-  const setupPopper = () => {
-    let offset = 6;
-    if (emojiPickerButton.value && picker.value) {
-      createPopper(emojiPickerButton.value, picker.value, {
-        placement: 'bottom-end',
-        modifiers: [
-          {
-            name: 'offset',
-            options: {
-              offset: [0, offset],
-            },
-          },
-        ],
-      });
-    }
-    document.body.addEventListener('click', clickListener);
-  };
-
-  const onSelectEmoji = (emoji: { i: string; }) => {
-    emojiPickerInput.value += emoji.i;
+const clickListener = (event: MouseEvent) => {
+  const isOutside = !(event.target as HTMLElement)?.closest(
+    '.input-picker-wrap',
+  );
+  if (isOutside && showEmojiPicker.value) {
     showEmojiPicker.value = false;
-  };
+  }
+};
 
-  const sendMessage = () => {
-    if (emojiPickerInput.value && (emojiPickerInput.value || '').trim() !== '') {
-      messageStore.sendMessage(emojiPickerInput.value);
-      emojiPickerInput.value = '';
-    }
-  };
+const setupPopper = () => {
+  let offset = 6;
+  if (emojiPickerButton.value && picker.value) {
+    createPopper(emojiPickerButton.value, picker.value, {
+      placement: 'bottom-end',
+      modifiers: [
+        {
+          name: 'offset',
+          options: {
+            offset: [0, offset],
+          },
+        },
+      ],
+    });
+  }
+  document.body.addEventListener('click', clickListener);
+};
 
-  onMounted(async () => {
-    await nextTick();
-    setupPopper();
-  });
+const onSelectEmoji = (emoji: { i: string; }) => {
+  emojiPickerInput.value += emoji.i;
+  showEmojiPicker.value = false;
+};
 
-  onBeforeUnmount(() => {
-    document.body.removeEventListener('click', clickListener);
-  });
+const sendMessage = () => {
+  if (emojiPickerInput.value && (emojiPickerInput.value || '').trim() !== '') {
+    messageStore.sendMessage(emojiPickerInput.value);
+    emojiPickerInput.value = '';
+    emit('messageAdded', true);
+  }
+};
+
+onMounted(async () => {
+  await nextTick();
+  setupPopper();
+});
+
+onBeforeUnmount(() => {
+  document.body.removeEventListener('click', clickListener);
+});
 </script>
 
 <template>

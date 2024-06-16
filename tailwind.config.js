@@ -9,6 +9,9 @@ export default {
   variants: {
     extend: {},
   },
+  daisyui: {
+    themes: ["light", "dark"],
+  },
   plugins: [
     daisyui
   ],

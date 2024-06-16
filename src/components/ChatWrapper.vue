@@ -1,16 +1,26 @@
 <script setup lang="ts">
-  import { storeToRefs } from 'pinia';
-  import SendMessage from './SendMessage.vue';
-  import { useMessageStore } from '@store/message';
+import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import SendMessage from './SendMessage.vue';
+import { useMessageStore } from '@store/message';
 
-  const messageStore = useMessageStore();
-  const { getMessages } = storeToRefs(messageStore);
+const messageStore = useMessageStore();
+const { getMessages } = storeToRefs(messageStore);
+
+const chatHistory = ref();
+
+const scrollToBottom = () => {
+  chatHistory.value?.scrollIntoView({ behavior: 'smooth' });
+};
 
 </script>
 
 <template>
-  <div class="chat-wrapper flex flex-col h-full">
-    <div class="chat-history flex-1 overflow-auto">
+  <div class="chat-wrapper flex flex-col">
+    <div
+      ref="chatHistory"
+      class="chat-history flex-1 overflow-auto mb-1 scrollbar-thin scroll-smooth"
+    >
       <template 
         v-for="message in getMessages"
         :key="message.id"
@@ -29,15 +39,19 @@
       </template>
     </div>
     <div class="chat-box mt-auto">
-      <SendMessage />
+      <SendMessage @message-added="scrollToBottom" />
     </div>
   </div>
 </template>
 <style scoped>
+.chat-wrapper {
+  height: 100%;
+  max-height: calc(100vh - 155px);
+}
 .chat-history {
-  max-height: fit-content;
+  max-height: 100%
 }
 .chat .chat-bubble {
-  max-width: fit-content;
+  max-width: 100%;
 }
 </style>
