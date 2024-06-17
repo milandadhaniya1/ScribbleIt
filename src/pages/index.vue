@@ -1,8 +1,8 @@
 <script setup lang="ts">
 
-const startGame = () => {
+// const startGame = () => {
   
-};
+// };
 </script>
 
 <template>
