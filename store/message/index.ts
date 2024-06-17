@@ -9,7 +9,8 @@ interface Message {
   userName: string,
   time: string,
   message: string,
-  type: 'default' | 'error' | 'success'
+  type: 'message' | 'image',
+  style: 'default' | 'error' | 'success'
 };
 
 export const useMessageStore = defineStore('MessageStore', () => {
@@ -20,15 +21,16 @@ export const useMessageStore = defineStore('MessageStore', () => {
     return uuidv4();
   };
 
-  const sendMessage = (message: string): void => {
-    const msgType = 'default';
+  const sendMessage = (message: string, type: 'message' | 'image' = 'message'): void => {
+    const msgStyle = 'default';
     const newMessage: Message = {
       id: generateUuid(),
       userId: userStore.currentUser?.id || '',
       userName: userStore.currentUser?.name || '',
       time: new Date().toLocaleTimeString(),
       message,
-      type: msgType
+      type,
+      style: msgStyle
     };
     messages.value.push(newMessage);
   };

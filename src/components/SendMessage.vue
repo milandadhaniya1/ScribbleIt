@@ -5,6 +5,7 @@ import 'vue3-emoji-picker/css';
 import { createPopper } from '@popperjs/core';
 import smileysPeopleIcon from '@src/assets/smileys_people.svg';
 import sendMessageIcon from '@src/assets/send_message.svg';
+import fileUploadIcon from '@src/assets/file_upload.svg';
 import { useMessageStore } from '@store/message';
 
 const messageStore = useMessageStore();
@@ -13,6 +14,7 @@ const emojiPickerInput = ref<string>('');
 const emojiPickerButton = ref<HTMLElement | null>(null);
 const showEmojiPicker = ref<boolean>(false);
 const picker = ref<HTMLElement | null>(null);
+const fileInput = ref<HTMLInputElement | null>(null);
 
 const emit = defineEmits(["messageAdded"]);
 
@@ -56,6 +58,25 @@ const sendMessage = () => {
   }
 };
 
+// Trigger file input click
+const triggerFileInput = () => {
+  if (fileInput.value) {
+    fileInput.value.click();
+  }
+};
+
+const handleFileUpload = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  if (input.files && input.files[0]) {
+    const file = input.files[0];
+    if (file.type === 'image/jpeg' || file.type === 'image/png') {
+      const url = URL.createObjectURL(file);
+      messageStore.sendMessage(url, 'image');
+      emit('messageAdded', true);
+    }
+  }
+};
+
 onMounted(async () => {
   await nextTick();
   setupPopper();
@@ -76,7 +97,7 @@ onBeforeUnmount(() => {
         placeholder="Type your guess here"
         @keyup.enter="sendMessage"
       >
-      <div class="input-picker-wrap flex items-center">
+      <div class="input-picker-wrap flex items-center gap-2">
         <button
           ref="emojiPickerButton"
           type="button"
@@ -89,10 +110,31 @@ onBeforeUnmount(() => {
             height="30"
           >
         </button>
+
+        <!-- eslint-disable-next-line vue/html-self-closing -->
+        <input
+          ref="fileInput"
+          type="file"
+          accept="image/jpeg, image/png"
+          class="hidden"
+          @change="handleFileUpload"
+        />
+        <button type="button">
+          <img
+            :src="fileUploadIcon"
+            alt="Upload Image"
+            title="Upload Image"
+            width="20"
+            height="20"
+            @click="triggerFileInput"
+          >
+        </button>
+
         <button type="button">
           <img
             :src="sendMessageIcon"
-            alt=""
+            alt="Send Message"
+            title="Send Message"
             width="30"
             height="30"
             @click="sendMessage"

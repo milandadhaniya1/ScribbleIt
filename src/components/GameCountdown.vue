@@ -11,7 +11,7 @@ const updateRemainingTime = () => {
   }
 };
 
-let interval: number;
+let interval: ReturnType<typeof setInterval>;
 
 onMounted(() => {
   interval = setInterval(updateRemainingTime, 1000);
