@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
+import * as localStorage from '@utils/localStorage';
 
 interface User {
   id: string,
@@ -49,6 +50,11 @@ export const useUsersStore = defineStore('UsersStore', () => {
     currentUser: defaultCurrentUser || null
   });
   const currentUser = computed(() => allUsers.value.currentUser);
+
+  const localData = ref({
+    name: localStorage.getLocalStorageItem('user', 'name'),
+    avtar: localStorage.getLocalStorageItem('user', 'avatar')
+  });
   
   const generateUuid = (): string => {
     return uuidv4();
@@ -73,10 +79,24 @@ export const useUsersStore = defineStore('UsersStore', () => {
     }
   };
 
+  const getUserLocalData = (): any => {
+    localData.value = {
+      name: localStorage.getLocalStorageItem('user', 'name'),
+      avtar: localStorage.getLocalStorageItem('user', 'avatar')
+    };
+    return localData.value;
+  };
+
+  const setUserLocalData = (key: string, value: any): void => {
+    localStorage.setLocalStorageItem('user', key, value);
+  };
+
   return {
     allUsers,
     currentUser,
     addUser,
-    deactiveUser
+    deactiveUser,
+    getUserLocalData,
+    setUserLocalData
   };
 });

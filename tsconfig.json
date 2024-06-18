@@ -24,6 +24,7 @@
       "@src/*": ["./src/*"],
       "@store/*": ["./store/*"],
       "@server/*": ["./server/*"],
+      "@utils/*": ["./utils/*"],
     }
   },
   "include": ["src/**/*.ts", "src/**/*.vue"],

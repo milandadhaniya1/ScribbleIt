@@ -2,7 +2,8 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import wordsList from './words.json';
 
-export const useSelectedWordsStore = defineStore('SelectedWords', () => {
+export const useGameStore = defineStore('gameStore', () => {
+  const isGameStarted = ref<boolean>(false);
   const selectedWord = ref<string>('');
   const availableWords = wordsList.list as string[];
   const randomWords = ref<string[]>([]);
@@ -29,10 +30,16 @@ export const useSelectedWordsStore = defineStore('SelectedWords', () => {
     }
   };
 
+  const startGame = () => {
+    isGameStarted.value = true;
+  };
+
   return {
+    isGameStarted,
     randomWords,
     getRandomWords,
     selectWord,
-    selectedWord
+    selectedWord,
+    startGame
   };
 });
