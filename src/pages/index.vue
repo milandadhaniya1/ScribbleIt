@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import UserLogin from '@src/components/UserLogin.vue';
 
 // const startGame = () => {
   
@@ -6,10 +7,7 @@
 </script>
 
 <template>
-  <div>
-    <h1>Index Page</h1>
-    <router-link to="/game">
-      Go to Game
-    </router-link>
+  <div class="container mx-auto bg-[url('./src/assets/bg.jpg')]">
+    <UserLogin />
   </div>
 </template>

@@ -8,7 +8,8 @@ export default defineConfig({
     alias: {
       '@src': path.resolve(__dirname, './src'),
       '@store': path.resolve(__dirname, './store'),
-      '@server': path.resolve(__dirname, './server')
+      '@server': path.resolve(__dirname, './server'),
+      '@utils': path.resolve(__dirname, './utils')
     },
   },
   plugins: [

@@ -1,28 +1,31 @@
 <script setup lang="ts">
+import { onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
+import router from '@src/router';
+import { useGameStore } from '@store/game';
+
 import PlayersWrapper from '@src/components/PlayersWrapper.vue';
 import GameWrapper from '@src/components/GameWrapper.vue';
 import ChatWrapper from '@src/components/ChatWrapper.vue';
 import GameCountdown from '@src/components/GameCountdown.vue';
 import GameGuessWord from '@src/components/GameGuessWord.vue';
+
+const gameStore = useGameStore();
+const { isGameStarted } = storeToRefs(gameStore);
+onMounted(() => {
+  // Redirect to home if game is not started
+  if (!isGameStarted.value) {
+    router.push({ path: '/' });
+  }
+});
 </script>
 
 <template>
-  <div class="container mx-auto bg-gray-700">
+  <div class="container mx-auto  bg-[url('./src/assets/bg.jpg')]">
     <div class="flex flex-col h-screen gap-2 p-2">
       <div class="w-full text-center">
-        <h1 class="text-3xl font-black">
-          <span class="text-white">S</span>
-          <span class="text-red-100">c</span>
-          <span class="text-red-200">r</span>
-          <span class="text-red-300">i</span>
-          <span class="text-red-400">b</span>
-          <span class="text-red-500">b</span>
-          <span class="text-red-600">l</span>
-          <span class="text-red-700">e </span>
-          <span class="text-red-100">I</span>
-          <span class="text-red-200">t</span>
-          <span class="text-red-300 animate-pulse">.</span>
-          <span class="text-red-400 animate-pulse">.</span>
+        <h1 class="animate-text border-white bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-5xl font-black mb-2">
+          Scribbl It..
         </h1>
       </div>
       <div

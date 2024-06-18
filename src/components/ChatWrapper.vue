@@ -95,7 +95,7 @@ const closeModal = () => {
 <style scoped>
 .chat-wrapper {
   height: 100%;
-  max-height: calc(100vh - 155px);
+  max-height: calc(100vh - 175px);
 }
 .chat-history {
   max-height: 100%
