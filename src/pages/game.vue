@@ -21,7 +21,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="container mx-auto bg-gray-700">
+  <div class="container mx-auto  bg-[url('./src/assets/bg.jpg')]">
     <div class="flex flex-col h-screen gap-2 p-2">
       <div class="w-full text-center">
         <h1 class="animate-text border-white bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-5xl font-black mb-2">
