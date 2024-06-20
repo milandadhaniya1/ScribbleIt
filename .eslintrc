@@ -19,7 +19,7 @@
   },
   "overrides": [
     {
-      "files": ["**/icons/*.vue", "**/pages/*.vue"],
+      "files": ["**/pages/*.vue"],
       "rules": {
           "vue/multi-word-component-names": 0
       }

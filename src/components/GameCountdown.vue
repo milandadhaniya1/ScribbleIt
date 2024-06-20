@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
-import clockCircleIcon from '@src/assets/clock-circle.svg';
 const remainingTime = ref(90); // 60 seconds countdown
 
 const updateRemainingTime = () => {
@@ -26,7 +25,7 @@ onUnmounted(() => {
   <div class="flex flex-row text-center items-center p-2 bg-neutral rounded-box text-neutral-content w-20 content-start justify-center gap-2">
     <span>
       <img
-        :src="clockCircleIcon"
+        src="/assets/clock-circle.svg"
         alt=""
         width="30"
         height="30"

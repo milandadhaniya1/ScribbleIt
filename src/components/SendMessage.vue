@@ -3,9 +3,6 @@ import { onBeforeUnmount, onMounted, ref, nextTick } from 'vue';
 import EmojiPicker from 'vue3-emoji-picker';
 import 'vue3-emoji-picker/css';
 import { createPopper } from '@popperjs/core';
-import smileysPeopleIcon from '@src/assets/smileys_people.svg';
-import sendMessageIcon from '@src/assets/send_message.svg';
-import fileUploadIcon from '@src/assets/file_upload.svg';
 import { useMessageStore } from '@store/message';
 
 const messageStore = useMessageStore();
@@ -104,7 +101,7 @@ onBeforeUnmount(() => {
           @click="showEmojiPicker = !showEmojiPicker"
         >
           <img
-            :src="smileysPeopleIcon"
+            src="/assets/smileys_people.svg"
             alt=""
             width="30"
             height="30"
@@ -121,7 +118,7 @@ onBeforeUnmount(() => {
         />
         <button type="button">
           <img
-            :src="fileUploadIcon"
+            src="/assets/file_upload.svg"
             alt="Upload Image"
             title="Upload Image"
             width="20"
@@ -132,7 +129,7 @@ onBeforeUnmount(() => {
 
         <button type="button">
           <img
-            :src="sendMessageIcon"
+            src="/assets/send_message.svg"
             alt="Send Message"
             title="Send Message"
             width="30"

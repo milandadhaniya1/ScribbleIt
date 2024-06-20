@@ -48,7 +48,7 @@ const closeModal = () => {
             {{ message.userName }}
           </div>
           <div
-            class="chat-bubble"
+            class="chat-bubble border border-solid border-black bg-white text-black"
             :class="{'chat-bubble-success': message.style === 'success', 'chat-bubble-error': message.style === 'error'}"
           >
             <template v-if="message.type === 'image'">
@@ -102,5 +102,9 @@ const closeModal = () => {
 }
 .chat .chat-bubble {
   max-width: 100%;
+}
+.chat .chat-bubble:before {
+  background-color: black !important;
+  bottom: -1px;
 }
 </style>

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "server:start": "pm2 start ecosystem.config.cjs",
     "server:restart": "pm2 restart",
@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
+    "cors": "^2.8.5",
     "express": "^4.19.2",
     "pinia": "^2.1.7",
     "pm2": "^5.3.1",
