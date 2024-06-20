@@ -7,7 +7,10 @@ import UserLogin from '@src/components/UserLogin.vue';
 </script>
 
 <template>
-  <div class="container mx-auto bg-[url('./src/assets/bg.jpg')]">
+  <div
+    class="container mx-auto"
+    style="background-image: url('/assets/bg.jpg')"
+  >
     <UserLogin />
   </div>
 </template>

@@ -1,6 +1,9 @@
 import express, { json } from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
+import path from 'path';
+import cors from 'cors';
+import { fileURLToPath } from 'url';
 
 const app = express();
 const server = http.createServer(app);
@@ -8,13 +11,22 @@ const io = new Server(server);
 
 let players = [];
 
+app.use(cors());
 app.use(json());
 
-app.use(express.static('dist'));
-app.get('', (req, res) => {
-    res.status(200).json({ message: 'Welcome'});
+// Serve static files from the 'dist' directory
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const distPath = path.join(__dirname, '..', 'dist');
+
+app.use(express.static(distPath));
+
+// API routes with prefix '/api'
+app.get('/api', (req, res) => {
+  res.status(200).json({ message: 'Welcome to the API' });
 });
-app.post('/login', (req, res) => {
+
+app.post('/api/login', (req, res) => {
   const { username } = req.body;
   if (!players.includes(username)) {
     players.push(username);
@@ -63,6 +75,11 @@ io.on('connection', (socket) => {
   socket.on('drawShape', (shapeData) => {
     io.emit('drawShape', shapeData); // Broadcast shape drawing data to all clients
   });
+});
+
+// Route handler for SPA fallback
+app.get('*', (req, res) => {
+  res.sendFile(path.join(distPath, 'index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
