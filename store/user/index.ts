@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
 import * as localStorage from '@utils/localStorage';
+import { socket } from "@src/socket";
 
 interface User {
   id: string,
@@ -17,37 +18,9 @@ interface Users {
 };
 
 export const useUsersStore = defineStore('UsersStore', () => {
-  const defaultUsers = [
-    {
-      id: uuidv4(),
-      name: 'Milan',
-      avatar: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-      isActive: true,
-      points: 100,
-      isTyping: false
-    },
-    {
-      id: uuidv4(),
-      name: 'Nirmal',
-      avatar: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-      isActive: true,
-      points: 90,
-      isTyping: true
-    },
-    {
-      id: uuidv4(),
-      name: 'Trishant',
-      avatar: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-      isActive: true,
-      points: 80,
-      isTyping: false
-    }
-  ];
-  const defaultCurrentUser = defaultUsers[0];
-
   const allUsers = ref<Users>({
-    list: defaultUsers || [],
-    currentUser: defaultCurrentUser || null
+    list: [],
+    currentUser: null
   });
   const currentUser = computed(() => allUsers.value.currentUser);
 
@@ -69,7 +42,9 @@ export const useUsersStore = defineStore('UsersStore', () => {
       points: 0,
       isTyping: false
     };
-    allUsers.value.list.push(newUser);
+
+    allUsers.value.currentUser = newUser;
+    socket.emit("user:create", newUser);
   };
 
   const deactiveUser = (id: string): void => {
@@ -91,12 +66,36 @@ export const useUsersStore = defineStore('UsersStore', () => {
     localStorage.setLocalStorageItem('user', key, value);
   };
 
+  const bindEvents = (): void => {
+    // sync the list of users upon connection
+    socket.on("connect", () => {
+      socket.emit("user:list");
+      socket.on("user:list", (res: User[]) => {
+        allUsers.value.list = res;
+      });
+    });
+
+    // update the store when an user was added
+    socket.on("user:created", (res: User) => {
+      allUsers.value.list.push(res);
+    });
+
+    // Remove user on disconnect
+    socket.on("user:disconnected", (userName) => {
+      // TODO: create notification
+      if (currentUser.value && currentUser.value?.id) {
+        alert(`user "${userName}" is disconnected`);
+      }
+    });
+  };
+
   return {
     allUsers,
     currentUser,
     addUser,
     deactiveUser,
     getUserLocalData,
-    setUserLocalData
+    setUserLocalData,
+    bindEvents
   };
 });
