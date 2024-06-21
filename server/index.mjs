@@ -26,18 +26,8 @@ const distPath = path.join(__dirname, '..', 'dist');
 app.use(express.static(distPath));
 
 // API routes with prefix '/api'
-app.get('/api', (req, res) => {
+app.get('/api', (_req, res) => {
   res.status(200).json({ message: 'Welcome to the API' });
-});
-
-app.post('/api/login', (req, res) => {
-  const { username } = req.body;
-  if (!players.includes(username)) {
-    players.push(username);
-    res.status(200).json({ message: 'Login successful', username });
-  } else {
-    res.status(400).json({ message: 'Username already exists' });
-  }
 });
 
 io.on('connection', (socket) => {
@@ -60,6 +50,10 @@ io.on('connection', (socket) => {
 
   socket.on('user:list', () => {
     io.emit('user:list', players);
+  });
+
+  socket.on('message:send', (msg) => {
+    io.emit('message:received', msg);
   });
 
   // ----------------------------
