@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
 import { useUsersStore } from '@store/user';
+import { socket } from "@src/socket";
 
 interface Message {
   id: string,
@@ -32,13 +33,21 @@ export const useMessageStore = defineStore('MessageStore', () => {
       type,
       style: msgStyle
     };
-    messages.value.push(newMessage);
+    socket.emit("message:send", newMessage);
   };
 
   const getMessages = computed(() => messages.value);
 
+  const bindEvents = (): void => {
+    // update the store when an message was added
+    socket.on("message:received", (msg: Message) => {
+      messages.value.push(msg);
+    });
+  };
+
   return {
     getMessages,
-    sendMessage
+    sendMessage,
+    bindEvents
   };
 });
