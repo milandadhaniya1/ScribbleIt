@@ -7,7 +7,11 @@ import { fileURLToPath } from 'url';
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173"
+  }
+});
 
 let players = [];
 
@@ -37,11 +41,28 @@ app.post('/api/login', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  console.log('New player connected');
 
+  // ----------------------------
   socket.on('disconnect', () => {
-    console.log('Player disconnected');
+    // Remove player on disconnect
+    if (socket.user && socket.user.name) {
+      players = players.filter(item => item.id !== socket.user.id);
+      io.emit('user:disconnected', socket.user.name);
+    }
+    io.emit('user:list', players);
   });
+
+  socket.on('user:create', (data) => {
+    players.push(data); // Add the new player to the array
+    socket.user = data;
+    io.emit('user:created', data);
+  });
+
+  socket.on('user:list', () => {
+    io.emit('user:list', players);
+  });
+
+  // ----------------------------
 
   // Drawing collaboration features
   socket.on('draw', (data) => {

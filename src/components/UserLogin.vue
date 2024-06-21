@@ -13,6 +13,7 @@ onMounted(() => {
 
 const setUserName = () => {
   if (username.value && username.value.trim() !== '') {
+    usersStore.addUser(username.value, 'YYYY');
     usersStore.setUserLocalData('name', username.value);
     gameStore.startGame();
     router.push({ path: 'game' });
