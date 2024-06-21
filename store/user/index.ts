@@ -33,7 +33,7 @@ export const useUsersStore = defineStore('UsersStore', () => {
     return uuidv4();
   };
 
-  const addUser = (name: string, avatar?: string): void => {
+  const addUser = (name: string, avatar?: any): void => {
     const newUser: User = {
       id: generateUuid(),
       name,

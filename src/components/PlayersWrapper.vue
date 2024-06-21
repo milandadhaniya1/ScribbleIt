@@ -1,9 +1,10 @@
 <script setup lang="ts">
-  import { storeToRefs } from 'pinia';
-  import { useUsersStore } from '@store/user';
+import { storeToRefs } from 'pinia';
+import { useUsersStore } from '@store/user';
+import PlayersAvatarIconWrapper from './PlayersAvatarIconWrapper.vue';
 
-  const userStore = useUsersStore();
-  const { allUsers } = storeToRefs(userStore);
+const userStore = useUsersStore();
+const { allUsers } = storeToRefs(userStore);
 </script>
 
 <template>
@@ -42,11 +43,10 @@
               width="24"
               height="24"
             >
-            <div class="avatar">
-              <div class="w-12 rounded-full ring-1 ring-white">
-                <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg">
-              </div>
-            </div>       
+            <PlayersAvatarIconWrapper
+              :user="user"
+              class="avtar"
+            />
           </div>
         </div>
       </template>
@@ -58,5 +58,9 @@
   .icon {
     height: 24px;
     width: 24px;
+  }
+  .avtar {
+    height: 48px;
+    width: 48px;
   }
 </style>

@@ -67,10 +67,25 @@ const handleFileUpload = (event: Event) => {
   if (input.files && input.files[0]) {
     const file = input.files[0];
     if (file.type === 'image/jpeg' || file.type === 'image/png') {
-      const url = URL.createObjectURL(file);
-      messageStore.sendMessage(url, 'image');
-      emit('messageAdded', true);
+      const reader = new FileReader();
+      const msg: {file: string | ArrayBuffer | null} = { file: null };
+
+      reader.onload = function (evt) {
+        msg.file = (evt.target as any).result;
+        messageStore.sendMessage(msg.file, 'image');
+        emit('messageAdded', true);
+      };
+
+      reader.onerror = function (error) {
+        console.error('Error reading file:', error);
+      };
+
+      reader.readAsDataURL(file);
+    } else {
+      console.warn('Unsupported file type:', file.type);
     }
+  } else {
+    console.warn('No file selected');
   }
 };
 

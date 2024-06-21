@@ -1,26 +1,45 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import router from '@src/router';
+import Avtar from '@src/components/avtars/index.vue';
 import { useUsersStore } from '@store/user';
 import { useGameStore } from '@store/game';
+import AvatarTypeSelection from './AvatarTypeSelection.vue';
 
 const usersStore = useUsersStore();
 const gameStore = useGameStore();
 const username = ref('');
+const avtarType= ref('random');
 onMounted(() => {
   username.value = usersStore.getUserLocalData().name;
 });
 
 const setUserName = () => {
   if (username.value && username.value.trim() !== '') {
-    usersStore.addUser(username.value, 'YYYY');
+    let avatar = {
+      type: avtarType.value,
+      data: ''
+    };
     usersStore.setUserLocalData('name', username.value);
+    usersStore.setUserLocalData('avatar', avatar);
+   
+    const user = JSON.parse(JSON.stringify(usersStore.getUserLocalData()));
+    console.log(user);
+    
+    if(user.avtar.type === 'custom') {
+      avatar.data = user.avtar.data;
+    }
+     usersStore.addUser(
+      username.value,
+      avatar
+    );
     gameStore.startGame();
     router.push({ path: 'game' });
   } else {
     // Error
   }
 };
+
 </script>
 
 <template>
@@ -46,6 +65,12 @@ const setUserName = () => {
                 required="true"
               >
             </div>
+            <AvatarTypeSelection v-model="avtarType" />
+            <Avtar
+              class="flex justify-center"
+              :avtar-type="avtarType"
+              :name="username"
+            />
             <button
               class="btn btn-outline block w-full hover:bg-gray-700 focus:bg-gray-700 focus:text-white"
               @click="setUserName()"
