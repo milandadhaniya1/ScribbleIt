@@ -1,13 +1,12 @@
 ﻿<script setup lang="ts">
-import { onBeforeUnmount, ref } from 'vue';
-import { useUsersStore } from '@store/user';
 import colors from './colors.json';
+import { onMounted, ref } from 'vue';
 
-const eyesObject = import.meta.glob('@public/assets/avatar/eyes/*.png');
+const eyesObject = import.meta.glob('@/public/assets/avatar/eyes/*.png');
 let eyes = Object.keys(eyesObject);
 eyes = eyes.map(str => str.replace(new RegExp('/public', 'g'), ''));
 
-const mouthObject = import.meta.glob('@public/assets/avatar/mouth/*.png');
+const mouthObject = import.meta.glob('@/public/assets/avatar/mouth/*.png');
 let mouths = Object.keys(mouthObject);
 mouths = mouths.map(str => str.replace(new RegExp('/public', 'g'), ''));
 
@@ -18,10 +17,14 @@ const getRandomElement = (arr: Array<string>) => {
 const eyeSrc = ref(getRandomElement(eyes));
 const mouthSrc = ref(getRandomElement(mouths));
 const faceColor = ref(getRandomElement(colors));
-      
-const userStore = useUsersStore();
+const emit = defineEmits<{
+  'send-custom': [value: Array<string>]
+}>();
 
-   
+onMounted(() =>{ 
+  emit('send-custom',  [faceColor.value, eyeSrc.value, mouthSrc.value]);
+});
+
 const randomizeFeatures = (attribute: string) => {
   switch(attribute) {
     case 'color': 
@@ -33,16 +36,8 @@ const randomizeFeatures = (attribute: string) => {
     default:
     mouthSrc.value = getRandomElement(mouths);
   }
+  emit('send-custom',  [faceColor.value, eyeSrc.value, mouthSrc.value]);
 };
-
-onBeforeUnmount(() => {
-  userStore.setUserLocalData('avatar',{
-  type: 'custom',
-  data: [faceColor.value, eyeSrc.value, mouthSrc.value]
- });
- 
- 
-});
 </script>
 <template>
   <div class="flex justify-center align-center">

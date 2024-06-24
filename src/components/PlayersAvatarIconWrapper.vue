@@ -20,7 +20,8 @@ const userData = computed(() => {
     <ShowavatarIcon v-else-if="userData.avatar?.type === 'custom'" />
     <GenerateDefault
       v-else
-      :name="userData.name"
+      :user="userData"
+      :is-icon="true"
     />
   </div>
 </template>

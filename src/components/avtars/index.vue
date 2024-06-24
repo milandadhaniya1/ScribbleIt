@@ -9,10 +9,20 @@ interface Props {
   }
 
 const props = defineProps<Props>();
+const emit = defineEmits<{
+  'send-avatar': [value: any]
+}>();
+
+const handleSave = (data: any) => {
+  emit('send-avatar', data);
+};
 
 </script>
 <template>
-  <generateCartoon v-if="props.avtarType === 'custom'" />
+  <generateCartoon
+    v-if="props.avtarType === 'custom'"
+    @send-custom="handleSave"
+  />
   <div
     v-else-if="props.avtarType === 'name'"
     class="flex justify-center"
@@ -27,9 +37,10 @@ const props = defineProps<Props>();
     v-else
     class="flex justify-center"
   >
-    <div class="default">
+    <div class="default size-auto">
       <generateDefault
         :name="props.name"
+        @send-data="handleSave"
       />
     </div>
   </div>
@@ -37,6 +48,5 @@ const props = defineProps<Props>();
 <style scoped>
 .default {
   width: 96px;
-    height: 96px;
 }
 </style>

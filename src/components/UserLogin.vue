@@ -13,22 +13,18 @@ const avtarType= ref('random');
 onMounted(() => {
   username.value = usersStore.getUserLocalData().name;
 });
+const avatarData = ref('');
 
 const setUserName = () => {
   if (username.value && username.value.trim() !== '') {
     let avatar = {
       type: avtarType.value,
-      data: ''
+      data: avatarData.value
     };
     usersStore.setUserLocalData('name', username.value);
     usersStore.setUserLocalData('avatar', avatar);
    
-    const user = JSON.parse(JSON.stringify(usersStore.getUserLocalData()));
-    console.log(user);
-    
-    if(user.avtar.type === 'custom') {
-      avatar.data = user.avtar.data;
-    }
+  
      usersStore.addUser(
       username.value,
       avatar
@@ -38,6 +34,10 @@ const setUserName = () => {
   } else {
     // Error
   }
+};
+
+const handleSend = (data: any) => {
+  avatarData.value = data;
 };
 
 </script>
@@ -67,9 +67,10 @@ const setUserName = () => {
             </div>
             <AvatarTypeSelection v-model="avtarType" />
             <Avtar
-              class="flex justify-center"
+              class="flex justify-center avatar-wrapper"
               :avtar-type="avtarType"
               :name="username"
+              @send-avatar="handleSend"
             />
             <button
               class="btn btn-outline block w-full hover:bg-gray-700 focus:bg-gray-700 focus:text-white"
@@ -83,3 +84,8 @@ const setUserName = () => {
     </div>
   </section>
 </template>
+<style scoped>
+.avatar-wrapper {
+  margin-top: 0px !important;
+}
+</style>
