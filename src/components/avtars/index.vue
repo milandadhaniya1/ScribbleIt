@@ -6,13 +6,17 @@ import generateDefault from './generateDefault.vue';
 interface Props {
   avtarType: string;
   name?: string;
-  }
+  avtarData?: object | string
+}
 
 const props = defineProps<Props>();
 
 </script>
 <template>
-  <generateCartoon v-if="props.avtarType === 'custom'" />
+  <generateCartoon
+    v-if="props.avtarType === 'custom'"
+    :data="avtarData"
+  />
   <div
     v-else-if="props.avtarType === 'name'"
     class="flex justify-center"

@@ -1,7 +1,7 @@
 ﻿<script setup lang="ts">
 interface Props {
   name?: string
-  }
+}
 
 const props = defineProps<Props>();  
 import { generateFromString } from 'generate-avatar';

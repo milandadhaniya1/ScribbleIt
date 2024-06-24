@@ -1,5 +1,5 @@
 ﻿<script setup lang="ts">
-import { onBeforeUnmount, ref } from 'vue';
+import { ref, onBeforeMount } from 'vue';
 import { useUsersStore } from '@store/user';
 import colors from './colors.json';
 
@@ -15,9 +15,9 @@ const getRandomElement = (arr: Array<string>) => {
   const randomIndex = Math.floor(Math.random() * arr.length);
     return arr[randomIndex];
 };
-const eyeSrc = ref(getRandomElement(eyes));
-const mouthSrc = ref(getRandomElement(mouths));
-const faceColor = ref(getRandomElement(colors));
+const eyeSrc = ref();
+const mouthSrc = ref();
+const faceColor = ref();
       
 const userStore = useUsersStore();
 
@@ -26,22 +26,37 @@ const randomizeFeatures = (attribute: string) => {
   switch(attribute) {
     case 'color': 
       faceColor.value = getRandomElement(colors);
+      setUserAvtar();
       return;
     case 'eye':
       eyeSrc.value = getRandomElement(eyes);
+      setUserAvtar();
       return;
     default:
-    mouthSrc.value = getRandomElement(mouths);
+      mouthSrc.value = getRandomElement(mouths);
+      setUserAvtar();
+      return;
   }
 };
 
-onBeforeUnmount(() => {
-  userStore.setUserLocalData('avatar',{
-  type: 'custom',
-  data: [faceColor.value, eyeSrc.value, mouthSrc.value]
- });
- 
- 
+const setUserAvtar = () => {
+  userStore.setUserLocalData('avatar', {
+    type: 'custom',
+    data: {
+      faceColor: faceColor.value, 
+      eyeSrc: eyeSrc.value, 
+      mouthSrc: mouthSrc.value 
+    }
+  });
+};
+
+onBeforeMount(() => {
+  const localData = userStore.getUserLocalData().avtar?.data;
+  eyeSrc.value = localData?.eyeSrc || getRandomElement(eyes);
+  mouthSrc.value = localData?.mouthSrc || getRandomElement(mouths);
+  faceColor.value = localData?.faceColor || getRandomElement(colors);
+
+  setUserAvtar();
 });
 </script>
 <template>
