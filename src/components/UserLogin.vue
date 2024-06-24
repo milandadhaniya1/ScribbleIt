@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onBeforeMount, ref } from 'vue';
 import router from '@src/router';
 import Avtar from '@src/components/avtars/index.vue';
 import { useUsersStore } from '@store/user';
@@ -9,23 +9,29 @@ import AvatarTypeSelection from './AvatarTypeSelection.vue';
 const usersStore = useUsersStore();
 const gameStore = useGameStore();
 const username = ref('');
-const avtarType= ref('random');
-onMounted(() => {
-  username.value = usersStore.getUserLocalData().name;
+const avtarType= ref('');
+const avtarData= ref('');
+
+const getLocalUserName = () => username.value = usersStore.getUserLocalData().name || '';
+const getLocalAvtarType = () => avtarType.value = usersStore.getUserLocalData().avtar?.type || 'random';
+const getLocalAvtar = () => avtarData.value = usersStore.getUserLocalData().avtar?.data || '';
+onBeforeMount(() => {
+  getLocalUserName();
+  getLocalAvtarType();
+  getLocalAvtar();
 });
 const avatarData = ref('');
 
 const setUserName = () => {
   if (username.value && username.value.trim() !== '') {
+    getLocalAvtar();
     let avatar = {
       type: avtarType.value,
       data: avatarData.value
     };
     usersStore.setUserLocalData('name', username.value);
-    usersStore.setUserLocalData('avatar', avatar);
    
-  
-     usersStore.addUser(
+    usersStore.addUser(
       username.value,
       avatar
     );
@@ -45,7 +51,7 @@ const handleSend = (data: any) => {
 <template>
   <section>
     <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto h-screen lg:py-0">
-      <h1 class="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-5xl font-black mb-6">
+      <h1 class="custom-animated-text text-5xl mb-6">
         Scribbl It..
       </h1>
       <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
@@ -69,6 +75,7 @@ const handleSend = (data: any) => {
             <Avtar
               class="flex justify-center avatar-wrapper"
               :avtar-type="avtarType"
+              :avtar-data="avtarData"
               :name="username"
               @send-avatar="handleSend"
             />

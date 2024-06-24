@@ -6,7 +6,8 @@ import generateDefault from './generateDefault.vue';
 interface Props {
   avtarType: string;
   name?: string;
-  }
+  avtarData?: object | string
+}
 
 const props = defineProps<Props>();
 const emit = defineEmits<{

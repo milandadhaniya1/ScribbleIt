@@ -1,5 +1,6 @@
 ﻿<script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onBeforeMount } from 'vue';
+import { useUsersStore } from '@store/user';
 
 interface Props {
   modelValue: string;
@@ -9,14 +10,15 @@ const props = defineProps<Props>();
 const emit = defineEmits<{
   'update:modelValue': [value: string]
 }>();
+const usersStore = useUsersStore();
 
 const options = ref([
   { value: 'name', label: 'Intial' },
   { value: 'custom', label: 'Custom' },
   { value: 'random', label: 'Random' }
 ]);
-const avtarType= ref('random');
-const currentIndex = ref(2);
+const avtarType = ref();
+const currentIndex = ref();
 if (props.modelValue) { avtarType.value = props.modelValue; }
 
 const selectNextType = () => {
@@ -30,6 +32,10 @@ const selectPreviousType = () => {
   avtarType.value = options.value[currentIndex.value].value;
   emit('update:modelValue', avtarType.value);
 };
+onBeforeMount(() => {
+  avtarType.value = usersStore.getUserLocalData().avtar?.type || 'random';
+  currentIndex.value = options.value.findIndex(obj => obj.value === avtarType.value);
+});
 </script>
 
 <template>
@@ -40,7 +46,7 @@ const selectPreviousType = () => {
     >
       <img src="/assets/avatar/arrow.png">
     </div>
-    <div class="font-serif">
+    <div class="font-mono text-lg tracking-wide custom-animated-text">
       {{ options[currentIndex].label }}
     </div>
     <div

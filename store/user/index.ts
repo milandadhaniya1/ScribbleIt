@@ -23,11 +23,6 @@ export const useUsersStore = defineStore('UsersStore', () => {
     currentUser: null
   });
   const currentUser = computed(() => allUsers.value.currentUser);
-
-  const localData = ref({
-    name: localStorage.getLocalStorageItem('user', 'name'),
-    avtar: localStorage.getLocalStorageItem('user', 'avatar')
-  });
   
   const generateUuid = (): string => {
     return uuidv4();
@@ -55,11 +50,10 @@ export const useUsersStore = defineStore('UsersStore', () => {
   };
 
   const getUserLocalData = (): any => {
-    localData.value = {
+    return {
       name: localStorage.getLocalStorageItem('user', 'name'),
       avtar: localStorage.getLocalStorageItem('user', 'avatar')
     };
-    return localData.value;
   };
 
   const setUserLocalData = (key: string, value: any): void => {
