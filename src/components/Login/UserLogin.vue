@@ -3,8 +3,8 @@ import { onBeforeMount, ref } from 'vue';
 import router from '@src/router';
 import { useUsersStore } from '@store/user';
 import { useGameStore } from '@store/game';
-import Avtar from '@src/components/Avtars/index.vue';
-import AvatarTypeSelection from '@src/components/Avtars/AvatarTypeSelection.vue';
+import Avtar from '@src/components/Avatars/index.vue';
+import AvatarTypeSelection from '@src/components/Avatars/AvatarTypeSelection.vue';
 
 const usersStore = useUsersStore();
 const gameStore = useGameStore();
