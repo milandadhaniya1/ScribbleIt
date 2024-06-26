@@ -1,13 +1,12 @@
 ﻿<script setup lang="ts">
-import { ref, onBeforeMount } from 'vue';
-import { useUsersStore } from '@store/user';
 import colors from './colors.json';
+import { onMounted, ref } from 'vue';
 
-const eyesObject = import.meta.glob('@public/assets/avatar/eyes/*.png');
+const eyesObject = import.meta.glob('@/public/assets/avatar/eyes/*.png');
 let eyes = Object.keys(eyesObject);
 eyes = eyes.map(str => str.replace(new RegExp('/public', 'g'), ''));
 
-const mouthObject = import.meta.glob('@public/assets/avatar/mouth/*.png');
+const mouthObject = import.meta.glob('@/public/assets/avatar/mouth/*.png');
 let mouths = Object.keys(mouthObject);
 mouths = mouths.map(str => str.replace(new RegExp('/public', 'g'), ''));
 
@@ -15,13 +14,17 @@ const getRandomElement = (arr: Array<string>) => {
   const randomIndex = Math.floor(Math.random() * arr.length);
     return arr[randomIndex];
 };
-const eyeSrc = ref();
-const mouthSrc = ref();
-const faceColor = ref();
-      
-const userStore = useUsersStore();
+const eyeSrc = ref(getRandomElement(eyes));
+const mouthSrc = ref(getRandomElement(mouths));
+const faceColor = ref(getRandomElement(colors));
+const emit = defineEmits<{
+  'send-custom': [value: Array<string>]
+}>();
 
-   
+onMounted(() =>{ 
+  emit('send-custom',  [faceColor.value, eyeSrc.value, mouthSrc.value]);
+});
+
 const randomizeFeatures = (attribute: string) => {
   switch(attribute) {
     case 'color': 
@@ -37,27 +40,8 @@ const randomizeFeatures = (attribute: string) => {
       setUserAvtar();
       return;
   }
+  emit('send-custom',  [faceColor.value, eyeSrc.value, mouthSrc.value]);
 };
-
-const setUserAvtar = () => {
-  userStore.setUserLocalData('avatar', {
-    type: 'custom',
-    data: {
-      faceColor: faceColor.value, 
-      eyeSrc: eyeSrc.value, 
-      mouthSrc: mouthSrc.value 
-    }
-  });
-};
-
-onBeforeMount(() => {
-  const localData = userStore.getUserLocalData().avtar?.data;
-  eyeSrc.value = localData?.eyeSrc || getRandomElement(eyes);
-  mouthSrc.value = localData?.mouthSrc || getRandomElement(mouths);
-  faceColor.value = localData?.faceColor || getRandomElement(colors);
-
-  setUserAvtar();
-});
 </script>
 <template>
   <div class="flex justify-center align-center">

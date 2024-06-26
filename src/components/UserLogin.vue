@@ -20,13 +20,14 @@ onBeforeMount(() => {
   getLocalAvtarType();
   getLocalAvtar();
 });
+const avatarData = ref('');
 
 const setUserName = () => {
   if (username.value && username.value.trim() !== '') {
     getLocalAvtar();
     let avatar = {
       type: avtarType.value,
-      data: avtarData.value || ''
+      data: avatarData.value
     };
     usersStore.setUserLocalData('name', username.value);
    
@@ -39,6 +40,10 @@ const setUserName = () => {
   } else {
     // Error
   }
+};
+
+const handleSend = (data: any) => {
+  avatarData.value = data;
 };
 
 </script>
@@ -68,10 +73,11 @@ const setUserName = () => {
             </div>
             <AvatarTypeSelection v-model="avtarType" />
             <Avtar
-              class="flex justify-center"
+              class="flex justify-center avatar-wrapper"
               :avtar-type="avtarType"
               :avtar-data="avtarData"
               :name="username"
+              @send-avatar="handleSend"
             />
             <button
               class="btn btn-outline block w-full hover:bg-gray-700 focus:bg-gray-700 focus:text-white"
@@ -85,3 +91,8 @@ const setUserName = () => {
     </div>
   </section>
 </template>
+<style scoped>
+.avatar-wrapper {
+  margin-top: 0px !important;
+}
+</style>

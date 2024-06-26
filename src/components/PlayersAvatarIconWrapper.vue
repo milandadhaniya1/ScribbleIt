@@ -23,7 +23,8 @@ const userData = computed(() => {
     />
     <GenerateDefault
       v-else
-      :name="userData.name"
+      :user="userData"
+      :is-icon="true"
     />
   </div>
 </template>
