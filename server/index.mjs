@@ -14,6 +14,7 @@ const io = new Server(server, {
 });
 
 let players = [];
+let drawingData = [];
 
 app.use(cors());
 app.use(json());
@@ -46,6 +47,7 @@ io.on('connection', (socket) => {
     players.push(data); // Add the new player to the array
     socket.user = data;
     io.emit('user:created', data);
+    io.emit('draw', drawingData);
   });
 
   socket.on('user:list', () => {
@@ -60,11 +62,13 @@ io.on('connection', (socket) => {
 
   // Drawing collaboration features
   socket.on('draw', (data) => {
-    io.emit('draw', data); // Broadcast drawing data to all clients
+    drawingData.push(data); // Store the drawing data
+    io.emit('draw', drawingData); // Broadcast drawing data to all clients
   });
 
   socket.on('clearBoard', () => {
-    io.emit('clearBoard'); // Broadcast clear board event to all clients
+    drawingData = []; // Clear the drawing data
+    io.emit('draw', drawingData); // Broadcast clear board event to all clients
   });
 
   // Cursor synchronization

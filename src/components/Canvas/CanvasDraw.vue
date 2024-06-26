@@ -1,27 +1,42 @@
 <script setup lang="ts">
-  import { ref, onMounted } from 'vue';
+  import { ref, onMounted, computed, watch } from 'vue';
+  import { useDrawingStore } from '@store/drawing';
 
   const container = ref<HTMLDivElement | null>(null);
-  const canvas = ref<HTMLCanvasElement | null>(null);
+  const canvas = ref<HTMLCanvasElement>();
   const isDrawing = ref(false);
   let context: CanvasRenderingContext2D | null = null;
+  const lastPos = ref({ x: 0, y:0 });
+  const drawingStore = useDrawingStore();
 
   const startDrawing = (event: MouseEvent) => {
     if (!context) return;
     isDrawing.value = true;
-    context.beginPath();
-    context.moveTo(event.offsetX, event.offsetY);
+    lastPos.value.x = event.offsetX;
+    lastPos.value.y = event.offsetY;
   };
 
   const draw = (event: MouseEvent) => {
     if (!isDrawing.value || !context) return;
     context.lineTo(event.offsetX, event.offsetY);
+
+    const currentPos = { x: event.offsetX, y: event.offsetY };
+    context.beginPath();
+    context.moveTo(lastPos.value.x, lastPos.value.y);
+    context.lineTo(currentPos.x, currentPos.y);
     context.stroke();
+
+    const drawingData = { startX: lastPos.value.x, startY: lastPos.value.y, endX: currentPos.x, endY: currentPos.y };
+    
+    drawingStore.addDrawing(drawingData);
+    lastPos.value = currentPos;
   };
 
   const stopDrawing = () => {
     if (!context) return;
-    isDrawing.value = false;
+    if (isDrawing.value) {
+      isDrawing.value = false;
+    }
     context.closePath();
   };
 
@@ -35,12 +50,36 @@
     canvasElement.height = containerElement.clientHeight;
   };
 
+  const drawings = computed(() => drawingStore.drawings);
+
+  const drawSharedDrawing = () => {
+    drawings.value.forEach(drawing => {
+      if (context) {
+        context.beginPath();
+        context.moveTo(drawing.startX, drawing.startY);
+        context.lineTo(drawing.endX, drawing.endY);
+        context.stroke();
+      }
+    });
+  };
+
+  const clearBoard = () => {
+    drawingStore.clearBoard();
+    drawSharedDrawing();
+  };
+
   onMounted(() => {
     if (canvas.value) {
       context = canvas.value.getContext('2d');
       resizeCanvas();
     }
   });
+
+  watch(
+    () => drawings.value,
+    () => drawSharedDrawing(),
+    { immediate: true }
+  );
 </script>
 
 <template>
@@ -56,6 +95,14 @@
       @mouseup="stopDrawing"
       @mouseleave="stopDrawing"
     />
+    <div class="canvas-controls absolute bottom-0">
+      <button
+        class="btn btn-outline btn-error"
+        @click="clearBoard"
+      >
+        Clear
+      </button>
+    </div>
   </div>
 </template>
 
@@ -69,5 +116,8 @@
     border: 0;
     min-width: 100%;
     min-height: 100%;
+  }
+  .canvas-controls {
+    
   }
 </style>
