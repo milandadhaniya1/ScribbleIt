@@ -4,7 +4,7 @@ import { storeToRefs } from 'pinia';
 import router from '@src/router';
 import { useGameStore } from '@store/game';
 
-import PlayersWrapper from '@src/components/PlayersWrapper.vue';
+import PlayersWrapper from '@src/components/Players/PlayersWrapper.vue';
 import GameWrapper from '@src/components/Game/GameWrapper.vue';
 import ChatWrapper from '@src/components/Chat/ChatWrapper.vue';
 import GameCountdown from '@src/components/Game/GameCountdown.vue';
