@@ -53,15 +53,12 @@ const randomizeFeatures = (attribute: string) => {
   switch(attribute) {
     case 'color': 
       faceColor.value = getRandomElement(colors);
-      sendCustom();
       return;
     case 'eye':
       eyeSrc.value = getRandomElement(eyes);
-      sendCustom();
       return;
     default:
       mouthSrc.value = getRandomElement(mouths);
-      sendCustom();
       return;
   }
 };
