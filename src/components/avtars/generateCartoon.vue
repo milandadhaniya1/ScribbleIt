@@ -1,6 +1,9 @@
 ﻿<script setup lang="ts">
 import colors from './colors.json';
 import { onMounted, ref } from 'vue';
+import { useUsersStore } from '@store/user';
+
+const userStore = useUsersStore();
 
 const eyesObject = import.meta.glob('@/public/assets/avatar/eyes/*.png');
 let eyes = Object.keys(eyesObject);
@@ -18,29 +21,49 @@ const eyeSrc = ref(getRandomElement(eyes));
 const mouthSrc = ref(getRandomElement(mouths));
 const faceColor = ref(getRandomElement(colors));
 const emit = defineEmits<{
-  'send-custom': [value: Array<string>]
+  'send-custom': [value: {
+    faceColor: string, 
+    eyeSrc: string, 
+    mouthSrc: string
+  }]
 }>();
 
+const sendCustom = () => {
+  userStore.setUserLocalData('avatar', {
+    type: 'custom',
+    data: {
+      faceColor: faceColor.value, 
+      eyeSrc: eyeSrc.value, 
+      mouthSrc: mouthSrc.value 
+    }
+  });
+
+  emit('send-custom',  {
+    faceColor: faceColor.value, 
+    eyeSrc: eyeSrc.value, 
+    mouthSrc: mouthSrc.value 
+  });
+};
+  
 onMounted(() =>{ 
-  emit('send-custom',  [faceColor.value, eyeSrc.value, mouthSrc.value]);
+  sendCustom();
 });
 
 const randomizeFeatures = (attribute: string) => {
   switch(attribute) {
     case 'color': 
       faceColor.value = getRandomElement(colors);
-      setUserAvtar();
+      sendCustom();
       return;
     case 'eye':
       eyeSrc.value = getRandomElement(eyes);
-      setUserAvtar();
+      sendCustom();
       return;
     default:
       mouthSrc.value = getRandomElement(mouths);
-      setUserAvtar();
+      sendCustom();
       return;
   }
-  emit('send-custom',  [faceColor.value, eyeSrc.value, mouthSrc.value]);
 };
 </script>
 <template>
