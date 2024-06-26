@@ -5,10 +5,10 @@ import router from '@src/router';
 import { useGameStore } from '@store/game';
 
 import PlayersWrapper from '@src/components/PlayersWrapper.vue';
-import GameWrapper from '@src/components/GameWrapper.vue';
-import ChatWrapper from '@src/components/ChatWrapper.vue';
-import GameCountdown from '@src/components/GameCountdown.vue';
-import GameGuessWord from '@src/components/GameGuessWord.vue';
+import GameWrapper from '@src/components/Game/GameWrapper.vue';
+import ChatWrapper from '@src/components/Chat/ChatWrapper.vue';
+import GameCountdown from '@src/components/Game/GameCountdown.vue';
+import GameGuessWord from '@src/components/Game/GameGuessWord.vue';
 
 const gameStore = useGameStore();
 const { isGameStarted } = storeToRefs(gameStore);

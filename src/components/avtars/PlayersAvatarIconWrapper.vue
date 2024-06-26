@@ -1,7 +1,7 @@
 ﻿<script setup lang="ts">
-import GenerateDefault from './avtars/GenerateDefault.vue';
-import GenerateByName from './avtars/GenerateByName.vue';
-import ShowAvatarIcon from './avtars/ShowAvatarIcon.vue';
+import GenerateDefault from '@src/components/Avtars/GenerateDefault.vue';
+import GenerateByName from '@src/components/Avtars/GenerateByName.vue';
+import ShowAvatarIcon from '@src/components/Avtars/ShowAvatarIcon.vue';
 import { computed } from 'vue';
 interface Props {
   user: any;

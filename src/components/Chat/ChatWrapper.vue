@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, nextTick } from 'vue';
 import { storeToRefs } from 'pinia';
-import SendMessage from './SendMessage.vue';
+import SendMessage from '@src/components/Chat/SendMessage.vue';
 import { useMessageStore } from '@store/message';
 
 const messageStore = useMessageStore();
@@ -51,12 +51,12 @@ const closeModal = () => {
             class="chat-bubble border border-solid border-black bg-white text-black"
             :class="{'chat-bubble-success': message.style === 'success', 'chat-bubble-error': message.style === 'error'}"
           >
-            <template v-if="message.type === 'image'">
+            <template v-if="message.type === 'image' && message.message">
               <!-- eslint-disable-next-line vue/html-self-closing -->
               <img
-                :src="message.message"
+                :src="message.message as string"
                 class="uploaded-image cursor-pointer"
-                @click="viewImage(message.message)"
+                @click="viewImage(message.message as string)"
               />
             </template>
             <template v-else>
@@ -67,7 +67,7 @@ const closeModal = () => {
       </template>
     </div>
     <div class="chat-box mt-auto">
-      <SendMessage @message-added="scrollToEnd" />
+      <send-message @message-added="scrollToEnd" />
     </div>
     <dialog
       id="show_image_modal"

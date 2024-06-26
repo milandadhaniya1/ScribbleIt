@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { useUsersStore } from '@store/user';
-import PlayersAvatarIconWrapper from './avtars/PlayersAvatarIconWrapper.vue';
+import PlayersAvatarIconWrapper from '@src/components/Avtars/PlayersAvatarIconWrapper.vue';
 
 const userStore = useUsersStore();
 const { allUsers } = storeToRefs(userStore);
