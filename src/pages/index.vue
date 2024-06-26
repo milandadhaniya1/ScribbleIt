@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
-import UserLogin from '@src/components/UserLogin.vue';
+import UserLogin from '@src/components/Login/UserLogin.vue';
 import { useConnectionStore } from "@store/connection";
 import { useGameStore } from "@store/game";
 
@@ -19,6 +19,6 @@ onMounted(() => {
     class="container mx-auto"
     style="background-image: url('/assets/bg.jpg')"
   >
-    <UserLogin />
+    <user-login />
   </div>
 </template>

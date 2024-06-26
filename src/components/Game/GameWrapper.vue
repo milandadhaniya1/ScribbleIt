@@ -1,6 +1,6 @@
 <script setup lang="ts">
 // import { storeToRefs } from 'pinia';
-import CanvasDraw from '@src/components/CanvasDraw.vue';
+import CanvasDraw from '@src/components/Canvas/CanvasDraw.vue';
 import { useGameStore } from '@store/game';
 
 const gameStore = useGameStore();
