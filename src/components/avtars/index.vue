@@ -1,7 +1,7 @@
 ﻿<script setup lang="ts">
-import generateCartoon from './generateCartoon.vue';
-import generateByName from './generateByName.vue';
-import generateDefault from './generateDefault.vue';
+import GenerateCartoon from './GenerateCartoon.vue';
+import GenerateByName from './GenerateByName.vue';
+import GenerateDefault from './GenerateDefault.vue';
 
 interface Props {
   avtarType: string;
@@ -20,7 +20,7 @@ const handleSave = (data: any) => {
 
 </script>
 <template>
-  <generateCartoon
+  <generate-cartoon
     v-if="props.avtarType === 'custom'"
     @send-custom="handleSave"
   />
@@ -29,7 +29,7 @@ const handleSave = (data: any) => {
     class="flex justify-center"
   >
     <div class="default">
-      <generateByName
+      <generate-by-name
         :name="props.name"
       />
     </div>
@@ -39,7 +39,7 @@ const handleSave = (data: any) => {
     class="flex justify-center"
   >
     <div class="default size-auto">
-      <generateDefault
+      <generate-default
         :name="props.name"
         @send-data="handleSave"
       />

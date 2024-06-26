@@ -4,7 +4,7 @@ import router from '@src/router';
 import Avtar from '@src/components/avtars/index.vue';
 import { useUsersStore } from '@store/user';
 import { useGameStore } from '@store/game';
-import AvatarTypeSelection from './AvatarTypeSelection.vue';
+import AvatarTypeSelection from './avtars/AvatarTypeSelection.vue';
 
 const usersStore = useUsersStore();
 const gameStore = useGameStore();
@@ -71,7 +71,7 @@ const handleSend = (data: any) => {
                 required="true"
               >
             </div>
-            <AvatarTypeSelection v-model="avtarType" />
+            <avatar-type-selection v-model="avtarType" />
             <Avtar
               class="flex justify-center avatar-wrapper"
               :avtar-type="avtarType"
