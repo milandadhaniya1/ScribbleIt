@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { ref, onMounted, computed, watch } from 'vue';
   import { useDrawingStore } from '@store/drawing';
+  import { socket } from "@src/socket";
 
   const container = ref<HTMLDivElement | null>(null);
   const canvas = ref<HTMLCanvasElement>();
@@ -8,6 +9,8 @@
   let context: CanvasRenderingContext2D | null = null;
   const lastPos = ref({ x: 0, y:0 });
   const drawingStore = useDrawingStore();
+  const canvasHeight = ref();
+  const canvasWidth = ref();
 
   const startDrawing = (event: MouseEvent) => {
     if (!context) return;
@@ -47,7 +50,9 @@
     if (!containerElement || !canvasElement) return;
 
     canvasElement.width = containerElement.clientWidth;
+    canvasWidth.value = containerElement.clientWidth;
     canvasElement.height = containerElement.clientHeight;
+    canvasHeight.value = containerElement.clientHeight;
   };
 
   const drawings = computed(() => drawingStore.drawings);
@@ -65,7 +70,6 @@
 
   const clearBoard = () => {
     drawingStore.clearBoard();
-    drawSharedDrawing();
   };
 
   onMounted(() => {
@@ -73,6 +77,12 @@
       context = canvas.value.getContext('2d');
       resizeCanvas();
     }
+
+    socket.on("clearBoard", () => {
+      if (context) {
+        context.clearRect(0, 0, canvasWidth.value, canvasHeight.value);
+      }
+    });
   });
 
   watch(
@@ -116,8 +126,5 @@
     border: 0;
     min-width: 100%;
     min-height: 100%;
-  }
-  .canvas-controls {
-    
   }
 </style>
