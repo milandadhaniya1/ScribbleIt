@@ -79,7 +79,7 @@ export const useUsersStore = defineStore('UsersStore', () => {
     socket.on("user:disconnected", (userName) => {
       // TODO: create notification
       if (currentUser.value && currentUser.value?.id) {
-        alert(`user "${userName}" is disconnected`);
+        console.log(`user "${userName}" is disconnected`);
       }
     });
   };

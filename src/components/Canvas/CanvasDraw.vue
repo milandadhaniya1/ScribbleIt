@@ -8,54 +8,52 @@ interface Props {
 }
 
 const props = defineProps<Props>();
-
-  import { ref, onMounted, watch } from 'vue';
+  import { ref, onMounted, computed, watch } from 'vue';
+  import { useDrawingStore } from '@store/drawing';
 
   const container = ref<HTMLDivElement | null>(null);
-  const canvas = ref<HTMLCanvasElement | null>(null);
+  const canvas = ref<HTMLCanvasElement>();
   const isDrawing = ref(false);
   let context: CanvasRenderingContext2D | null = null;
   const eraserSize = 20;
-  const path = ref<Path2D | null>(null);
+  const lastPos = ref({ x: 0, y:0 });
+  const drawingStore = useDrawingStore();
 
   const startDrawing = (event: MouseEvent) => {
     if (!context) return;
-    
-    if (!path.value) path.value = new Path2D();
     isDrawing.value = true;
-    const rect = canvas.value!.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-
-      path.value.moveTo(x, y);
-
-    context.beginPath();
-    context.moveTo(event.offsetX, event.offsetY);
+    lastPos.value.x = event.offsetX;
+    lastPos.value.y = event.offsetY;
   };
 
   const draw = (event: MouseEvent) => {
-    if (!isDrawing.value || !context ||!path.value) return;
+    if (!isDrawing.value || !context) return;
     if(props.eraserMode) {
       const rect = canvas?.value.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
       context.clearRect(x - eraserSize / 2, y - eraserSize / 2, eraserSize, eraserSize);
     } else{
-      const rect = canvas.value!.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
+    context.lineTo(event.offsetX, event.offsetY);
 
-      path.value.lineTo(x, y);
-      context.lineWidth = props.strokeSize || 8;
-      context.strokeStyle = props.selectedColor || '#000000';
-      context.lineTo(event.offsetX, event.offsetY);
-      context.stroke();
+    const currentPos = { x: event.offsetX, y: event.offsetY };
+    context.beginPath();
+    context.moveTo(lastPos.value.x, lastPos.value.y);
+    context.lineTo(currentPos.x, currentPos.y);
+    context.stroke();
+
+    const drawingData = { startX: lastPos.value.x, startY: lastPos.value.y, endX: currentPos.x, endY: currentPos.y };
+    
+    drawingStore.addDrawing(drawingData);
+    lastPos.value = currentPos;
     }
   };
 
   const stopDrawing = () => {
     if (!context) return;
-    isDrawing.value = false;
+    if (isDrawing.value) {
+      isDrawing.value = false;
+    }
     context.closePath();
   };
 
@@ -67,6 +65,24 @@ const props = defineProps<Props>();
 
     canvasElement.width = containerElement.clientWidth;
     canvasElement.height = containerElement.clientHeight;
+  };
+
+  const drawings = computed(() => drawingStore.drawings);
+
+  const drawSharedDrawing = () => {
+    drawings.value.forEach(drawing => {
+      if (context) {
+        context.beginPath();
+        context.moveTo(drawing.startX, drawing.startY);
+        context.lineTo(drawing.endX, drawing.endY);
+        context.stroke();
+      }
+    });
+  };
+
+  const clearBoard = () => {
+    drawingStore.clearBoard();
+    drawSharedDrawing();
   };
 
   onMounted(() => {
@@ -101,6 +117,11 @@ const props = defineProps<Props>();
     });
     
 
+  watch(
+    () => drawings.value,
+    () => drawSharedDrawing(),
+    { immediate: true }
+  );
 </script>
 
 <template>
@@ -117,6 +138,14 @@ const props = defineProps<Props>();
       @mouseleave="stopDrawing"
       @click="fillArea"
     />
+    <div class="canvas-controls absolute bottom-0">
+      <button
+        class="btn btn-outline btn-error"
+        @click="clearBoard"
+      >
+        Clear
+      </button>
+    </div>
   </div>
 </template>
 
@@ -130,5 +159,8 @@ const props = defineProps<Props>();
     border: 0;
     min-width: 100%;
     min-height: 100%;
+  }
+  .canvas-controls {
+    
   }
 </style>
