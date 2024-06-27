@@ -9,8 +9,16 @@ interface Drawing {
   endY: number;
 }
 
+interface Cursors {
+  x: number;
+  y: number;
+  userId: string;
+  userName: string;
+}
+
 export const useDrawingStore = defineStore('drawingStore',() => {
   const drawings = ref<Drawing[]>([]);
+  const cursors = ref<Cursors[]>([]);
   const addDrawing = (drawing: Drawing) => {
     if (drawing) {
       drawings.value.push(drawing);
@@ -26,6 +34,10 @@ export const useDrawingStore = defineStore('drawingStore',() => {
     // update the store when an message was added
     socket.on("draw", (drawing: Drawing[]) => {
       drawings.value = drawing;
+    });
+
+    socket.on("cursorUpdate", (updatedCursors: Cursors[]) => {
+      cursors.value = updatedCursors;
     });
   };
 

@@ -7,6 +7,8 @@ import { fileURLToPath } from 'url';
 
 const app = express();
 const server = http.createServer(app);
+
+// Added cors for development
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:5173"
@@ -15,6 +17,9 @@ const io = new Server(server, {
 
 let players = [];
 let drawingData = [];
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+let isGameStarted = false;
+let cursors = {};
 
 app.use(cors());
 app.use(json());
@@ -31,14 +36,28 @@ app.get('/api', (_req, res) => {
   res.status(200).json({ message: 'Welcome to the API' });
 });
 
+app.post('/api/game/start', (_req, res) => {
+  isGameStarted = true;
+  drawingData = [];
+
+  io.emit('draw', drawingData);
+  io.emit('clearBoard', true);
+  io.emit('gameStarted', true); // Broadcast game start event to all clients
+  res.status(200).json({ message: 'Game Started' });
+});
+
 io.on('connection', (socket) => {
 
-  // ----------------------------
   socket.on('disconnect', () => {
     // Remove player on disconnect
     if (socket.user && socket.user.name) {
+      // Remove player from list
       players = players.filter(item => item.id !== socket.user.id);
       io.emit('user:disconnected', socket.user.name);
+
+      // Remove cursor
+      delete cursors[socket.user.id];
+      io.emit('cursorUpdate', Object.values(cursors)); 
     }
     io.emit('user:list', players);
   });
@@ -58,8 +77,6 @@ io.on('connection', (socket) => {
     io.emit('message:received', msg);
   });
 
-  // ----------------------------
-
   // Drawing collaboration features
   socket.on('draw', (data) => {
     drawingData.push(data); // Store the drawing data
@@ -72,14 +89,9 @@ io.on('connection', (socket) => {
     io.emit('clearBoard', true); // Broadcast clear board event to all clients
   });
 
-  // Cursor synchronization
-  socket.on('cursor', (data) => {
-    io.emit('cursor', data); // Broadcast cursor data to all clients
-  });
-
-  // Object selection and manipulation
-  socket.on('objectManipulation', (data) => {
-    io.emit('objectManipulation', data); // Broadcast object manipulation data to all clients
+  socket.on('cursorMove', (data) => {
+    cursors[socket.user.id] = data;
+    io.emit('cursorUpdate', Object.values(cursors));
   });
 
   // Additional drawing collaboration features
@@ -89,11 +101,6 @@ io.on('connection', (socket) => {
 
   socket.on('toggleEraser', (isEraser) => {
     io.emit('toggleEraser', isEraser); // Broadcast eraser toggle to all clients
-  });
-
-  // Shape recognition and drawing assist
-  socket.on('drawShape', (shapeData) => {
-    io.emit('drawShape', shapeData); // Broadcast shape drawing data to all clients
   });
 });
 
