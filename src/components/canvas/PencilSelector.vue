@@ -1,5 +1,5 @@
 ﻿<template>
-  <div class="icon-square flex justify-center items-center">
+  <div class="icon-square flex justify-center items-center bg-slate-200">
     <img
       class="pencil-icon"
       src="/assets/pencil-icon.svg"
@@ -10,7 +10,6 @@
 .icon-square {
     width: 42px; /* Width of the square */
     height: 42px; /* Height of the square */
-    background-color: #6c6cc8; 
 }
 .pencil-icon {  
   width: 24px;

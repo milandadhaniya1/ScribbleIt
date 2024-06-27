@@ -3,8 +3,6 @@ import colors from './colors.json';
 import { onMounted, ref } from 'vue';
 import { useUsersStore } from '@store/user';
 
-const userStore = useUsersStore();
-
 const eyesObject = import.meta.glob('@/public/assets/avatar/eyes/*.png');
 let eyes = Object.keys(eyesObject);
 eyes = eyes.map(str => str.replace(new RegExp('/public', 'g'), ''));
@@ -29,15 +27,6 @@ const emit = defineEmits<{
 }>();
 
 const sendCustom = () => {
-  userStore.setUserLocalData('avatar', {
-    type: 'custom',
-    data: {
-      faceColor: faceColor.value, 
-      eyeSrc: eyeSrc.value, 
-      mouthSrc: mouthSrc.value 
-    }
-  });
-
   emit('send-custom',  {
     faceColor: faceColor.value, 
     eyeSrc: eyeSrc.value, 

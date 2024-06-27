@@ -15,10 +15,11 @@ const clearCanva = () => {
 <template>
   <div
     class="icon-square flex justify-center items-center bg-slate-200"
+    @click="clearCanva()"
   >
     <img
       class="trash-icon cursor-pointer"
-      src="/assets/trash.jpg"      
+      src="/assets/trash.png"      
       @click="clearCanva()"
     > <!-- Pencil icon -->
   </div>

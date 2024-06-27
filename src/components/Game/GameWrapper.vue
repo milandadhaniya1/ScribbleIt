@@ -6,6 +6,7 @@ import SelectedColors from '@src/components/Canvas/SelectedColors.vue';
 import PencilSelector from '@src/components/Canvas/PencilSelector.vue';
 import EraserSelector from '@src/components/Canvas/EraserSelector.vue';
 import PencilStrokeSizeSelector from '@src/components/Canvas/PencilStrokeSizeSelector.vue';
+import FillColor from '@src/components/Canvas/FillColor.vue';
 import ClearCanva from '@src/components/Canvas/ClearCanva.vue';
 import { useGameStore } from '@store/game';
 import { ref } from 'vue';
@@ -27,20 +28,18 @@ const backgroundColor = ref('#FFFFFF');
 const strokeSize = ref(8);
 const eraser = ref(false);
 const clearCanvas = ref(false);
-const isPencil = ref(true);
+const selectedTool = ref('pencil');
 // const { selectedWord } = storeToRefs(gameStore);
 
 const randomWords = gameStore.getRandomWords();
 gameStore.selectWord(randomWords[0]);
 
 const updateSelectedColor = (color: string) => {
-  selectedColor.value = color;
-  // if(isPencil.value) {
-  //   selectedColor.value = color;
-  // } else {
-  //   backgroundColor.value = color;
-  // }
-      
+  if(selectedTool.value === 'bucket') {
+    backgroundColor.value = color;
+  } else {
+    selectedColor.value = color; 
+  }     
 };
 
 const reverseColor = () => {
@@ -58,11 +57,14 @@ const changeToeraseMode = (flag:boolean) =>{
 };
 
 const clearAll = (flag:boolean) => {
-  clearCanvas.value = flag;
+  clearCanvas.value = flag;  
+  selectedTool.value = 'pencil';
+  selectedColor.value ="#000000";
+  backgroundColor.value = "#FFFFFF";
 };
 
-const selectPencil = (value:boolean) => {
-  isPencil.value = value;
+const selectTools = (value:string) => {
+  selectedTool.value = value;
 };
 </script>
 
@@ -74,42 +76,67 @@ const selectPencil = (value:boolean) => {
       :stroke-size="strokeSize"
       :eraser-mode="eraser"
       :clear-mode="clearCanvas"
+      :selected-tool="selectedTool"
     />
   </div>
   <div class="flex gap-2 align-items-center mt-4 mb-1">
-    <SelectedColors
+    <selected-colors
       :background-color="backgroundColor"
       :selected-color="selectedColor"
       @reverse-color="reverseColor"
     />
-    <ColorPalette
+    <color-palette
       :colors="colors"
       class="w-2/4"
       @color-selected="updateSelectedColor"
     />
-    <PencilSelector @click="selectPencil(true)" />
-    <!-- <FillColor @click="selectPencil(false)" /> -->
-    <EraserSelector @eraser-mode="changeToeraseMode" />
-    <PencilStrokeSizeSelector
+    <pencil-selector
       class="cursor-pointer"
+      :class="{'active' : selectedTool === 'pencil'}"
+      @click="selectTools('pencil')"
+    />
+    <fill-color
+      class="cursor-pointer"
+      :class="{'active' : selectedTool === 'bucket'}"
+      @click="selectTools('bucket')"
+    />
+    <eraser-selector
+      :class="{'active' : selectedTool === 'eraser'}"
+      @click="selectTools('eraser')"
+      @eraser-mode="changeToeraseMode"
+    />
+    <pencil-stroke-size-selector
+      class="cursor-pointer"
+      :class="{'active' : strokeSize === 8}"
       size="8"
       @click="changeStrokeSize(8)"
     />
-    <PencilStrokeSizeSelector    
+    <pencil-stroke-size-selector    
       class="cursor-pointer"
+      :class="{'active' : strokeSize === 12}"
       size="12"
       @click="changeStrokeSize(12)"
     />
-    <PencilStrokeSizeSelector    
+    <pencil-stroke-size-selector    
       class="cursor-pointer"
+      :class="{'active' : strokeSize === 20}"
       size="20"
       @click="changeStrokeSize(20)"
     />
-    <PencilStrokeSizeSelector    
+    <pencil-stroke-size-selector    
       class="cursor-pointer"
-      size="36"
-      @click="changeStrokeSize(36)"
+      :class="{'active' : strokeSize === 28}"
+      size="28"
+      @click="changeStrokeSize(28)"
     />
-    <ClearCanva @clear="clearAll" />
+    <clear-canva
+      :class="{'active' : clearCanvas === true}"
+      @clear="clearAll"
+    />
   </div>
 </template>
+<style scoped>
+.active {
+  background-color: #6c6cc8; 
+}
+</style>

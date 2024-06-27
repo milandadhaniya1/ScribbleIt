@@ -4,7 +4,8 @@ interface Props {
   backgroundColor: string,
   strokeSize: number,
   eraserMode: boolean,
-  clearMode: boolean
+  clearMode: boolean,
+  selectedTool: string
 }
 
 const props = defineProps<Props>();
@@ -20,22 +21,23 @@ const props = defineProps<Props>();
   const drawingStore = useDrawingStore();
 
   const startDrawing = (event: MouseEvent) => {
+    if (props.selectedTool === 'pencil' || props.selectedTool === 'eraser') {
     if (!context) return;
     isDrawing.value = true;
     lastPos.value.x = event.offsetX;
     lastPos.value.y = event.offsetY;
+    }
   };
 
   const draw = (event: MouseEvent) => {
     if (!isDrawing.value || !context) return;
-    if(props.eraserMode) {
-      const rect = canvas?.value.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      context.clearRect(x - eraserSize / 2, y - eraserSize / 2, eraserSize, eraserSize);
-    } else{
-    context.lineTo(event.offsetX, event.offsetY);
-
+    if (props.selectedTool === 'pencil') {  
+      context.strokeStyle = props.selectedColor;
+    } else if(props.selectedTool === 'eraser') {
+      context.strokeStyle = '#FFFFFF';
+      context.lineWidth = eraserSize;
+    }
+    // context.lineTo(event.offsetX, event.offsetY);
     const currentPos = { x: event.offsetX, y: event.offsetY };
     context.beginPath();
     context.moveTo(lastPos.value.x, lastPos.value.y);
@@ -46,7 +48,7 @@ const props = defineProps<Props>();
     
     drawingStore.addDrawing(drawingData);
     lastPos.value = currentPos;
-    }
+    
   };
 
   const stopDrawing = () => {
@@ -71,12 +73,14 @@ const props = defineProps<Props>();
 
   const drawSharedDrawing = () => {
     drawings.value.forEach(drawing => {
-      if (context) {
-        context.beginPath();
-        context.moveTo(drawing.startX, drawing.startY);
-        context.lineTo(drawing.endX, drawing.endY);
-        context.stroke();
-      }
+      if (context) {        
+          context.beginPath();        
+          context.strokeStyle = props.selectedColor;
+          context.lineWidth = props.strokeSize;
+          context.moveTo(drawing.startX, drawing.startY);
+          context.lineTo(drawing.endX, drawing.endY);
+          context.stroke();
+        }
     });
   };
 
@@ -92,36 +96,122 @@ const props = defineProps<Props>();
     }
   });
 
-  watch(() => props.backgroundColor, (newColor) => {
-      setCanvasBackground(newColor);
-    });
 
-    const setCanvasBackground = (color: string) => {
-      if (context && canvas.value) {
-        context.fillStyle = color;
-        context.fillRect(0, 0, canvas.value.width, canvas.value.height);
-        context.globalCompositeOperation = "destination-out";
-        context.fill();
-      }
-    };
-
-    watch(() => props.clearMode, (newVal) => {
+  watch(() => props.clearMode, (newVal) => {
       if(newVal === true && canvas.value) {
         context = canvas.value.getContext('2d');
         if(context) {
+          clearBoard();
         context.clearRect(0, 0, canvas.value.width, canvas.value.height); 
-        context.fillStyle = props.backgroundColor;
+        context.fillStyle = '#FFFFFF';
         context.fillRect(0, 0, canvas.value.width, canvas.value.height);
         }
       }
     });
-    
-
-  watch(
+    watch(
     () => drawings.value,
     () => drawSharedDrawing(),
     { immediate: true }
   );
+    const handleMouseDown = (event: MouseEvent) => {  
+      if (props.selectedTool === 'pencil') {
+        startDrawing(event);
+      } else if (props.selectedTool === 'bucket') {
+        fillArea(event);
+      }
+    };
+const fillArea = (event: MouseEvent) => {
+  if (props.selectedTool === 'bucket' && canvas.value && context) {
+    const x = event.offsetX;
+    const y = event.offsetY;
+    const imageData = context.getImageData(0, 0, canvas.value.width, canvas.value.height);
+    const targetColor = getColorAtPixel(imageData.data, x, y);
+    const fillColor = hexToRgba(props.backgroundColor);
+    if (colorsMatch(targetColor, fillColor)) return;
+
+      floodFill(canvas.value, x, y, targetColor, fillColor);
+    }
+  };
+
+    const getColorAtPixel = (data: Uint8ClampedArray, x: number, y: number): [number, number, number, number] => {
+      const index = (y * canvas.value!.width + x) * 4;
+      return [data[index], data[index + 1], data[index + 2], data[index + 3]];
+    };
+
+    const hexToRgba = (hex: string): [number, number, number, number] => {
+      const bigint = parseInt(hex.slice(1), 16);
+      const r = (bigint >> 16) & 255;
+      const g = (bigint >> 8) & 255;
+      const b = bigint & 255;
+      return [r, g, b, 255];
+    };
+
+    const colorsMatch = (a: [number, number, number, number], b: [number, number, number, number]): boolean => {
+      return a[0] === b[0] && a[1] === b[1] && a[2] === b[2] && a[3] === b[3];
+    };
+
+    const floodFill = (canvas: HTMLCanvasElement, x: number, y: number, targetColor: [number, number, number, number], fillColor: [number, number, number, number]) => {
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const data = imageData.data;
+      const stack = [[x, y]];
+
+      while (stack.length) {
+        let [currentX, currentY] = stack.pop() as [number, number];
+        let index = (currentY * canvas.width + currentX) * 4;
+
+        while (currentY >= 0 && colorsMatch(getColorAtPixel(data, currentX, currentY), targetColor)) {
+          currentY--;
+          index -= canvas.width * 4;
+        }
+
+        index += canvas.width * 4;
+        currentY++;
+
+        let reachLeft = false;
+        let reachRight = false;
+
+        while (currentY < canvas.height && colorsMatch(getColorAtPixel(data, currentX, currentY), targetColor)) {
+          setColorAtPixel(data, index, fillColor);
+
+          if (currentX > 0) {
+            if (colorsMatch(getColorAtPixel(data, currentX - 1, currentY), targetColor)) {
+              if (!reachLeft) {
+                stack.push([currentX - 1, currentY]);
+                reachLeft = true;
+              }
+            } else if (reachLeft) {
+              reachLeft = false;
+            }
+          }
+
+          if (currentX < canvas.width - 1) {
+            if (colorsMatch(getColorAtPixel(data, currentX + 1, currentY), targetColor)) {
+              if (!reachRight) {
+                stack.push([currentX + 1, currentY]);
+                reachRight = true;
+              }
+            } else if (reachRight) {
+              reachRight = false;
+            }
+          }
+
+          currentY++;
+          index += canvas.width * 4;
+        }
+      }
+
+      ctx.putImageData(imageData, 0, 0);
+    };
+
+    const setColorAtPixel = (data: Uint8ClampedArray, index: number, fillColor: [number, number, number, number]) => {
+      data[index] = fillColor[0];
+      data[index + 1] = fillColor[1];
+      data[index + 2] = fillColor[2];
+      data[index + 3] = fillColor[3];
+    };
+
 </script>
 
 <template>
@@ -130,6 +220,12 @@ const props = defineProps<Props>();
     class="canvas-container"
   >
     <canvas
+      ref="canvas"
+      @mousedown="handleMouseDown"
+      @mouseup="stopDrawing"
+      @mousemove="draw"
+    />
+    <!-- <canvas
       ref="canvas"
       class="border"
       @mousedown="startDrawing"
@@ -146,6 +242,7 @@ const props = defineProps<Props>();
         Clear
       </button>
     </div>
+    /> -->
   </div>
 </template>
 
