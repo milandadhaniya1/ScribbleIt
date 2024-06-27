@@ -11,6 +11,7 @@ interface Props {
 const props = defineProps<Props>();
   import { ref, onMounted, computed, watch } from 'vue';
   import { useDrawingStore } from '@store/drawing';
+  import { socket } from "@src/socket";
 
   const container = ref<HTMLDivElement | null>(null);
   const canvas = ref<HTMLCanvasElement>();
@@ -19,6 +20,8 @@ const props = defineProps<Props>();
   const eraserSize = 20;
   const lastPos = ref({ x: 0, y:0 });
   const drawingStore = useDrawingStore();
+  const canvasHeight = ref();
+  const canvasWidth = ref();
 
   const startDrawing = (event: MouseEvent) => {
     if (props.selectedTool === 'pencil' || props.selectedTool === 'eraser') {
@@ -66,7 +69,9 @@ const props = defineProps<Props>();
     if (!containerElement || !canvasElement) return;
 
     canvasElement.width = containerElement.clientWidth;
+    canvasWidth.value = containerElement.clientWidth;
     canvasElement.height = containerElement.clientHeight;
+    canvasHeight.value = containerElement.clientHeight;
   };
 
   const drawings = computed(() => drawingStore.drawings);
@@ -86,7 +91,6 @@ const props = defineProps<Props>();
 
   const clearBoard = () => {
     drawingStore.clearBoard();
-    drawSharedDrawing();
   };
 
   onMounted(() => {
@@ -94,6 +98,12 @@ const props = defineProps<Props>();
       context = canvas.value.getContext('2d');
       resizeCanvas();
     }
+
+    socket.on("clearBoard", () => {
+      if (context) {
+        context.clearRect(0, 0, canvasWidth.value, canvasHeight.value);
+      }
+    });
   });
 
 
@@ -256,8 +266,5 @@ const fillArea = (event: MouseEvent) => {
     border: 0;
     min-width: 100%;
     min-height: 100%;
-  }
-  .canvas-controls {
-    
   }
 </style>

@@ -68,7 +68,8 @@ io.on('connection', (socket) => {
 
   socket.on('clearBoard', () => {
     drawingData = []; // Clear the drawing data
-    io.emit('draw', drawingData); // Broadcast clear board event to all clients
+    io.emit('draw', drawingData);
+    io.emit('clearBoard', true); // Broadcast clear board event to all clients
   });
 
   // Cursor synchronization
