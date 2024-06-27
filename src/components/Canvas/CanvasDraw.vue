@@ -1,14 +1,17 @@
 <script setup lang="ts">
   import { ref, onMounted, computed, watch } from 'vue';
   import { useDrawingStore } from '@store/drawing';
+  import { useUsersStore } from '@store/user';
   import { socket } from "@src/socket";
+
+  const drawingStore = useDrawingStore();
+  const usersStore = useUsersStore();
 
   const container = ref<HTMLDivElement | null>(null);
   const canvas = ref<HTMLCanvasElement>();
   const isDrawing = ref(false);
   let context: CanvasRenderingContext2D | null = null;
   const lastPos = ref({ x: 0, y:0 });
-  const drawingStore = useDrawingStore();
   const canvasHeight = ref();
   const canvasWidth = ref();
 
@@ -78,10 +81,43 @@
       resizeCanvas();
     }
 
+    // Clear board
     socket.on("clearBoard", () => {
       if (context) {
         context.clearRect(0, 0, canvasWidth.value, canvasHeight.value);
       }
+    });
+
+    // Show cursors on move cursor
+    socket.on('cursorUpdate', (cursors) => {
+      if (context && canvas.value) {
+        context.clearRect(0, 0, canvas.value.width, canvas.value.height); // Clear the canvas
+
+        // Draw all cursors and usernames
+        cursors.forEach((cursor: { x: number; y: number; userId: string; userName: string; }) => {
+          if (context) {
+            context.fillStyle = 'red';
+            context.beginPath();
+            context.arc(cursor.x, cursor.y, 5, 0, Math.PI * 2);
+            context.fill();
+            context.fillStyle = 'black';
+            context.fillText(cursor.userName, cursor.x + 5, cursor.y - 5);
+          }
+        });
+        drawSharedDrawing();
+      }
+    });
+
+    // Track the cursor position
+    const userId = usersStore.currentUser?.id;
+    const userName = usersStore.currentUser?.name;
+    canvas.value.addEventListener('mousemove', (event) => {
+      const rect = canvas.value.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      // Send cursor position to the server
+      socket.emit('cursorMove', { x, y, userId, userName });
     });
   });
 
