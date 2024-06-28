@@ -26,3 +26,9 @@
 .scrollbar-thin::-webkit-scrollbar-track {
   background-color: #edf2f7;
 }
+
+@media (min-width: 640px) {
+  .container {
+      max-width: 100% !important;
+  }
+}
