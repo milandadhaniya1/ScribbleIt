@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: "skribbl",
-      script: "./server/server.mjs",
+      script: "./server/index.mjs",
       instances: "4",
       exec_mode: "cluster",
       env: {
