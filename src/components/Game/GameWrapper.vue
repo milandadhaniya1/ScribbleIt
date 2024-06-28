@@ -25,7 +25,7 @@ const colors = ref<string[]>([
     ]);
 const selectedColor = ref<string>('#000000');
 const backgroundColor = ref('#FFFFFF');
-const strokeSize = ref(8);
+const strokeSize = ref(2);
 const eraser = ref(false);
 const clearCanvas = ref(false);
 const selectedTool = ref('pencil');
@@ -104,6 +104,12 @@ const selectTools = (value:string) => {
       :class="{'active' : selectedTool === 'eraser'}"
       @click="selectTools('eraser')"
       @eraser-mode="changeToeraseMode"
+    />
+    <pencil-stroke-size-selector
+      class="cursor-pointer"
+      :class="{'active' : strokeSize === 2}"
+      size="2"
+      @click="changeStrokeSize(2)"
     />
     <pencil-stroke-size-selector
       class="cursor-pointer"

@@ -1,7 +1,6 @@
 ﻿<script setup lang="ts">
 import colors from './colors.json';
 import { onMounted, ref } from 'vue';
-import { useUsersStore } from '@store/user';
 
 const eyesObject = import.meta.glob('@/public/assets/avatar/eyes/*.png');
 let eyes = Object.keys(eyesObject);
@@ -42,12 +41,15 @@ const randomizeFeatures = (attribute: string) => {
   switch(attribute) {
     case 'color': 
       faceColor.value = getRandomElement(colors);
+      sendCustom();
       return;
     case 'eye':
-      eyeSrc.value = getRandomElement(eyes);
+      eyeSrc.value = getRandomElement(eyes); 
+      sendCustom();
       return;
     default:
       mouthSrc.value = getRandomElement(mouths);
+      sendCustom();
       return;
   }
 };
