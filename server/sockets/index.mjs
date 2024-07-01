@@ -1,12 +1,15 @@
+import dotenv from 'dotenv';
+
 let players = [];
 let drawingData = [];
 let cursors = {};
+dotenv.config();
 
 const shouldSaveLog = process.env.SaveLogToDb === 'true';
 
 let User, Message;
 if (shouldSaveLog) {
-  import('../models/logModel.mjs').then(module => {
+  import('../models/userModel.mjs').then(module => {
     User = module.default;
   });
   import('../models/messageModel.mjs').then(module => {
@@ -61,12 +64,14 @@ export const socketHandler = (socket, io) => {
   socket.on('message:send', async (msg) => {
     io.emit('message:received', msg);
 
-    if (shouldSaveLog && socket.user) {
+    if (shouldSaveLog && socket.user && msg) {
       // Save chat history
       await Message.create({
         userId: socket.user.id,
         username: socket.user.name,
-        message: msg,
+        messageTime: msg.time || '',
+        message: msg.message || '',
+        type: msg.type || 'message'
       });
     }
   });

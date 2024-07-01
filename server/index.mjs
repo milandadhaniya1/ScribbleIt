@@ -6,7 +6,6 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
-import mongoose from 'mongoose';
 
 import gameRoutes from './routers/gameRoutes.mjs';
 import { socketHandler } from './sockets/index.mjs';
@@ -37,11 +36,10 @@ app.use(express.static(distPath));
 app.use('/api', gameRoutes);
 
 if (process.env.SaveLogToDb === 'true') {
-  // (async () => {
-    // const mongoose = await import('mongoose');
-    // console.log(process.env.MongoDBConnection);
-    mongoose.connect('mongodb://localhost:27017/Skribbl').then(() => console.log('Connected DB!'));
-  // })();
+  (async () => {
+    const mongoose = await import('mongoose');
+    mongoose.connect(process.env.MongoDBConnection).then(() => console.log('Connected DB!'));
+  })();
 }
 
 io.on('connection', (socket) => {
@@ -49,7 +47,7 @@ io.on('connection', (socket) => {
 });
 
 // Route handler for SPA fallback
-app.get('*', (req, res) => {
+app.get('*', (_req, res) => {
   res.sendFile(path.join(distPath, 'index.html'));
 });
 
