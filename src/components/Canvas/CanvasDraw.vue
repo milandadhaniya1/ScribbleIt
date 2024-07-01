@@ -39,20 +39,11 @@ const props = defineProps<Props>();
   };
 
   const draw = (event: MouseEvent) => {
-    if (!isDrawing.value || !context) return;
-
- 
+    if (!isDrawing.value || !context) return; 
     const currentPos = { x: event.offsetX, y: event.offsetY };
-    // if(props.selectedTool === 'eraser') {
-    //   const rect = canvas?.value.getBoundingClientRect();
-    //   const x = event.clientX - rect.left;
-    //   const y = event.clientY - rect.top;
-    //   context?.clearRect(x - eraserSize / 2, y - eraserSize / 2, eraserSize, eraserSize);
-    // }else 
     if (props.selectedTool === 'bucket') {
         fillArea(event.offsetX, event.offsetY, props.backgroundColor);
-    } else {
-    
+    } else {    
       context.lineWidth = props.selectedTool === 'eraser' ? eraserSize :  props.strokeSize;
       context.strokeStyle = props.selectedTool === 'eraser' ? 'white' : props.selectedColor;
       context.lineCap = "round";
@@ -61,13 +52,12 @@ const props = defineProps<Props>();
       context.moveTo(lastPos.value.x, lastPos.value.y);
       context.lineTo(currentPos.x, currentPos.y);
       context.stroke();
-    }
-    
+    }    
     const color = props.selectedTool === 'bucket' ? props.backgroundColor : props.selectedColor;
-      const drawingData = { startX: lastPos.value.x, startY: lastPos.value.y, endX: currentPos.x, endY: currentPos.y, type: props.selectedTool, color: color };
+    const drawingData = { startX: lastPos.value.x, startY: lastPos.value.y, endX: currentPos.x, endY: currentPos.y, type: props.selectedTool, color: color };
       
-      drawingStore.addDrawing(drawingData);
-      lastPos.value = currentPos;
+    drawingStore.addDrawing(drawingData);
+    lastPos.value = currentPos;
   };
 
   const stopDrawing = () => {
@@ -283,24 +273,6 @@ const fillArea = (x: number,y: number, color:string) => {
       @mousemove="draw"
       @click="fillArea($event.offsetX, $event.offsetY, props.backgroundColor)"
     />
-    <!-- <canvas
-      ref="canvas"
-      class="border"
-      @mousedown="startDrawing"
-      @mousemove="draw"
-      @mouseup="stopDrawing"
-      @mouseleave="stopDrawing"
-      @click="fillArea"
-    />
-    <div class="canvas-controls absolute bottom-0">
-      <button
-        class="btn btn-outline btn-error"
-        @click="clearBoard"
-      >
-        Clear
-      </button>
-    </div>
-    /> -->
   </div>
 </template>
 
