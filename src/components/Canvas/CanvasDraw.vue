@@ -27,34 +27,47 @@ const props = defineProps<Props>();
   const canvasWidth = ref();
 
   const startDrawing = (event: MouseEvent) => {
-    if (props.selectedTool === 'pencil' || props.selectedTool === 'eraser') {
     if (!context) return;
     isDrawing.value = true;
-    lastPos.value.x = event.offsetX;
-    lastPos.value.y = event.offsetY;
+    if (context && props.selectedTool === 'pencil') {
+      lastPos.value.x = event.offsetX;
+      lastPos.value.y = event.offsetY;
+        context.beginPath();
+        context.moveTo(event.clientX, event.clientY);
     }
+  
   };
 
   const draw = (event: MouseEvent) => {
     if (!isDrawing.value || !context) return;
-    if (props.selectedTool === 'pencil') {  
-      context.strokeStyle = props.selectedColor;
-    } else if(props.selectedTool === 'eraser') {
-      context.strokeStyle = '#FFFFFF';
-      context.lineWidth = eraserSize;
-    }
-    // context.lineTo(event.offsetX, event.offsetY);
-    const currentPos = { x: event.offsetX, y: event.offsetY };
-    context.beginPath();
-    context.moveTo(lastPos.value.x, lastPos.value.y);
-    context.lineTo(currentPos.x, currentPos.y);
-    context.stroke();
 
-    const drawingData = { startX: lastPos.value.x, startY: lastPos.value.y, endX: currentPos.x, endY: currentPos.y };
+ 
+    const currentPos = { x: event.offsetX, y: event.offsetY };
+    // if(props.selectedTool === 'eraser') {
+    //   const rect = canvas?.value.getBoundingClientRect();
+    //   const x = event.clientX - rect.left;
+    //   const y = event.clientY - rect.top;
+    //   context?.clearRect(x - eraserSize / 2, y - eraserSize / 2, eraserSize, eraserSize);
+    // }else 
+    if (props.selectedTool === 'bucket') {
+        fillArea(event.offsetX, event.offsetY, props.backgroundColor);
+    } else {
     
-    drawingStore.addDrawing(drawingData);
-    lastPos.value = currentPos;
+      context.lineWidth = props.selectedTool === 'eraser' ? eraserSize :  props.strokeSize;
+      context.strokeStyle = props.selectedTool === 'eraser' ? 'white' : props.selectedColor;
+      context.lineCap = "round";
+      context.lineJoin = "round";
+      context.beginPath();
+      context.moveTo(lastPos.value.x, lastPos.value.y);
+      context.lineTo(currentPos.x, currentPos.y);
+      context.stroke();
+    }
     
+    const color = props.selectedTool === 'bucket' ? props.backgroundColor : props.selectedColor;
+      const drawingData = { startX: lastPos.value.x, startY: lastPos.value.y, endX: currentPos.x, endY: currentPos.y, type: props.selectedTool, color: color };
+      
+      drawingStore.addDrawing(drawingData);
+      lastPos.value = currentPos;
   };
 
   const stopDrawing = () => {
@@ -62,7 +75,7 @@ const props = defineProps<Props>();
     if (isDrawing.value) {
       isDrawing.value = false;
     }
-    context.closePath();
+    context.beginPath();
   };
 
   const resizeCanvas = () => {
@@ -81,13 +94,20 @@ const props = defineProps<Props>();
 
   const drawSharedDrawing = () => {
     drawings.value.forEach(drawing => {
-      if (context) {        
+      if (context) {
+        if(drawing.type === 'bucket') {
+          fillArea(drawing.startX, drawing.endY, drawing.color);
+        } else{
           context.beginPath();        
-          context.strokeStyle = props.selectedColor;
-          context.lineWidth = props.strokeSize;
+          context.strokeStyle = drawing.type === 'eraser' ? 'white' : drawing.color;
+          context.lineWidth =  drawing.type === 'eraser' ?  eraserSize : props.strokeSize;
+          context.lineCap = "round";
+          context.lineJoin = "round";
           context.moveTo(drawing.startX, drawing.startY);
           context.lineTo(drawing.endX, drawing.endY);
           context.stroke();
+        }   
+         
         }
     });
   };
@@ -159,20 +179,11 @@ const props = defineProps<Props>();
     () => drawSharedDrawing(),
     { immediate: true }
   );
-    const handleMouseDown = (event: MouseEvent) => {  
-      if (props.selectedTool === 'pencil') {
-        startDrawing(event);
-      } else if (props.selectedTool === 'bucket') {
-        fillArea(event);
-      }
-    };
-const fillArea = (event: MouseEvent) => {
-  if (props.selectedTool === 'bucket' && canvas.value && context) {
-    const x = event.offsetX;
-    const y = event.offsetY;
+const fillArea = (x: number,y: number, color:string) => {
+  if (canvas.value && context) {
     const imageData = context.getImageData(0, 0, canvas.value.width, canvas.value.height);
     const targetColor = getColorAtPixel(imageData.data, x, y);
-    const fillColor = hexToRgba(props.backgroundColor);
+    const fillColor = hexToRgba(color);
     if (colorsMatch(targetColor, fillColor)) return;
 
       floodFill(canvas.value, x, y, targetColor, fillColor);
@@ -267,9 +278,10 @@ const fillArea = (event: MouseEvent) => {
   >
     <canvas
       ref="canvas"
-      @mousedown="handleMouseDown"
+      @mousedown="startDrawing"
       @mouseup="stopDrawing"
       @mousemove="draw"
+      @click="fillArea($event.offsetX, $event.offsetY, props.backgroundColor)"
     />
     <!-- <canvas
       ref="canvas"

@@ -7,6 +7,8 @@ interface Drawing {
   startY: number;
   endX: number;
   endY: number;
+  type: string,
+  color:string
 }
 
 interface Cursors {
