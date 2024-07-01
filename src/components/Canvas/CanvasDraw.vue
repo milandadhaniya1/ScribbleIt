@@ -53,8 +53,17 @@ const props = defineProps<Props>();
       context.lineTo(currentPos.x, currentPos.y);
       context.stroke();
     }    
-    const color = props.selectedTool === 'bucket' ? props.backgroundColor : props.selectedColor;
-    const drawingData = { startX: lastPos.value.x, startY: lastPos.value.y, endX: currentPos.x, endY: currentPos.y, type: props.selectedTool, color: color };
+    const color = (props.selectedTool === 'bucket' ? props.backgroundColor : props.selectedColor) || '#000000';
+    const size = props.selectedTool === 'eraser' ? eraserSize : props.strokeSize
+    const drawingData = { 
+      startX: lastPos.value.x, 
+      startY: lastPos.value.y, 
+      endX: currentPos.x, 
+      endY: currentPos.y, 
+      type: props.selectedTool, 
+      color,
+      size
+    };
       
     drawingStore.addDrawing(drawingData);
     lastPos.value = currentPos;
@@ -90,7 +99,7 @@ const props = defineProps<Props>();
         } else{
           context.beginPath();        
           context.strokeStyle = drawing.type === 'eraser' ? 'white' : drawing.color;
-          context.lineWidth =  drawing.type === 'eraser' ?  eraserSize : props.strokeSize;
+          context.lineWidth = drawing.size;
           context.lineCap = "round";
           context.lineJoin = "round";
           context.moveTo(drawing.startX, drawing.startY);
