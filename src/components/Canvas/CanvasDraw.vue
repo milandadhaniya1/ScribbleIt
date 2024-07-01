@@ -54,7 +54,7 @@ const props = defineProps<Props>();
       context.stroke();
     }    
     const color = (props.selectedTool === 'bucket' ? props.backgroundColor : props.selectedColor) || '#000000';
-    const size = props.selectedTool === 'eraser' ? eraserSize : props.strokeSize
+    const size = props.selectedTool === 'eraser' ? eraserSize : props.strokeSize;
     const drawingData = { 
       startX: lastPos.value.x, 
       startY: lastPos.value.y, 
@@ -95,7 +95,7 @@ const props = defineProps<Props>();
     drawings.value.forEach(drawing => {
       if (context) {
         if(drawing.type === 'bucket') {
-          fillArea(drawing.startX, drawing.endY, drawing.color);
+          fillArea(drawing.endX, drawing.endY, drawing.color);
         } else{
           context.beginPath();        
           context.strokeStyle = drawing.type === 'eraser' ? 'white' : drawing.color;
@@ -280,7 +280,6 @@ const fillArea = (x: number,y: number, color:string) => {
       @mousedown="startDrawing"
       @mouseup="stopDrawing"
       @mousemove="draw"
-      @click="fillArea($event.offsetX, $event.offsetY, props.backgroundColor)"
     />
   </div>
 </template>
