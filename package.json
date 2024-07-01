@@ -15,9 +15,12 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
+    "body-parser": "^1.20.2",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "generate-avatar": "^1.4.10",
+    "mongoose": "^8.4.4",
     "pinia": "^2.1.7",
     "pm2": "^5.3.1",
     "socket.io": "^4.7.5",
