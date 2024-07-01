@@ -39,7 +39,7 @@ onMounted(() => {
           <game-guess-word />
         </div>
       </div>
-      <div class="flex flex-row h-screen gap-2">
+      <div class="flex flex-row h-4/6 gap-2">
         <div
           class="basis-1/4 h-full border-solid border border-slate-300 rounded-box bg-white p-2"
         >
