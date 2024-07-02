@@ -43,19 +43,22 @@ const props = defineProps<Props>();
     const currentPos = { x: event.offsetX, y: event.offsetY };
     if (props.selectedTool === 'bucket') {
         fillArea(event.offsetX, event.offsetY, props.backgroundColor);
-    } else if(props.selectedTool === 'eraser') {
-      const x = event.clientX;
-      const y = event.clientY;
-      context.clearRect(x - eraserSize / 2, y - eraserSize / 2, eraserSize, eraserSize);
-    }else {    
+    } else {    
       context.lineWidth = props.selectedTool === 'eraser' ? eraserSize :  props.strokeSize;
       context.strokeStyle = props.selectedTool === 'eraser' ? 'white' : props.selectedColor;
       context.lineCap = "round";
       context.lineJoin = "round";
+      if(props.selectedTool === 'eraser') {
+        const rect = canvas?.value.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      context.clearRect(x - eraserSize / 2, y - eraserSize / 2, eraserSize, eraserSize);
+      } else {
       context.beginPath();
       context.moveTo(lastPos.value.x, lastPos.value.y);
       context.lineTo(currentPos.x, currentPos.y);
       context.stroke();
+      }
     }    
     const color = (props.selectedTool === 'bucket' ? props.backgroundColor : props.selectedColor) || '#000000';
     const size = props.selectedTool === 'eraser' ? eraserSize : props.strokeSize;
@@ -284,7 +287,6 @@ const fillArea = (x: number,y: number, color:string) => {
       @mousedown="startDrawing"
       @mouseup="stopDrawing"
       @mousemove="draw"
-      @click="fillArea($event.offsetX, $event.offsetY, props.backgroundColor)"
     />
   </div>
 </template>
