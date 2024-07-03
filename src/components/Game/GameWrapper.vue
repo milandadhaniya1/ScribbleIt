@@ -7,7 +7,7 @@ import PencilSelector from '@src/components/Canvas/PencilSelector.vue';
 import EraserSelector from '@src/components/Canvas/EraserSelector.vue';
 import PencilStrokeSizeSelector from '@src/components/Canvas/PencilStrokeSizeSelector.vue';
 import FillColor from '@src/components/Canvas/FillColor.vue';
-import ClearCanva from '@src/components/Canvas/ClearCanva.vue';
+import ClearCanva from '@src/components/Canvas/ClearCanvas.vue';
 import { useGameStore } from '@store/game';
 import { ref } from 'vue';
 
