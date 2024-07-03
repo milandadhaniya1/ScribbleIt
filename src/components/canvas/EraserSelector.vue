@@ -13,9 +13,7 @@ const changeToErase = () => {
 };
 </script>
 <template>
-  <div
-    class="icon-square flex justify-center items-center bg-slate-200"
-  >
+  <div class="icon-square flex justify-center items-center bg-slate-200">
     <img
       class="eraser-icon cursor-pointer"
       src="/assets/eraser.png"
@@ -25,10 +23,13 @@ const changeToErase = () => {
 </template>
 <style scoped>
 .icon-square {
-    width: 42px; /* Width of the square */
-    height: 42px; /* Height of the square */
+  width: 42px;
+  /* Width of the square */
+  height: 42px;
+  /* Height of the square */
 }
-.eraser-icon {  
+
+.eraser-icon {
   width: 24px;
   height: 24px;
 }

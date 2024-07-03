@@ -1,14 +1,14 @@
 ﻿<script setup lang="ts">
-  interface Props {
-    colors: Array<string[]>
-  }
+interface Props {
+  colors: Array<string[]>
+}
 const props = defineProps<Props>();
 const emit = defineEmits<{
   'color-selected': [value: string]
 }>();
 
-const selectColor = (color: string) => {  
- emit('color-selected', color);
+const selectColor = (color: string) => {
+  emit('color-selected', color);
 };
 </script>
 <template>
@@ -29,6 +29,7 @@ const selectColor = (color: string) => {
   display: flex;
   flex-wrap: wrap;
 }
+
 .color-box {
   width: 24px;
   height: 24px;

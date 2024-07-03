@@ -33,12 +33,14 @@ defineProps<Props>();
   background-color: #ffe0bd;
   border-radius: 50%;
 }
+
 .eye {
   width: 100%;
   height: 55%;
   top: 4px;
   scale: 0.7;
 }
+
 .mouth {
   width: 100%;
   height: 37%;

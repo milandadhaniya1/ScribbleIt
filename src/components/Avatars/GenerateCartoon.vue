@@ -12,39 +12,39 @@ mouths = mouths.map(str => str.replace(new RegExp('/public', 'g'), ''));
 
 const getRandomElement = (arr: Array<string>) => {
   const randomIndex = Math.floor(Math.random() * arr.length);
-    return arr[randomIndex];
+  return arr[randomIndex];
 };
 const eyeSrc = ref(getRandomElement(eyes));
 const mouthSrc = ref(getRandomElement(mouths));
 const faceColor = ref(getRandomElement(colors));
 const emit = defineEmits<{
   'send-custom': [value: {
-    faceColor: string, 
-    eyeSrc: string, 
+    faceColor: string,
+    eyeSrc: string,
     mouthSrc: string
   }]
 }>();
 
 const sendCustom = () => {
-  emit('send-custom',  {
-    faceColor: faceColor.value, 
-    eyeSrc: eyeSrc.value, 
-    mouthSrc: mouthSrc.value 
+  emit('send-custom', {
+    faceColor: faceColor.value,
+    eyeSrc: eyeSrc.value,
+    mouthSrc: mouthSrc.value
   });
 };
-  
-onMounted(() =>{ 
+
+onMounted(() => {
   sendCustom();
 });
 
 const randomizeFeatures = (attribute: string) => {
-  switch(attribute) {
-    case 'color': 
+  switch (attribute) {
+    case 'color':
       faceColor.value = getRandomElement(colors);
       sendCustom();
       return;
     case 'eye':
-      eyeSrc.value = getRandomElement(eyes); 
+      eyeSrc.value = getRandomElement(eyes);
       sendCustom();
       return;
     default:
@@ -66,7 +66,8 @@ const randomizeFeatures = (attribute: string) => {
         class="arrow cursor-pointer left"
         data-avatar-index="1"
         @click="randomizeFeatures('eye')"
-      /><div
+      />
+      <div
         class="arrow cursor-pointer left"
         data-avatar-index="2"
         @click="randomizeFeatures('mouth')"
@@ -97,7 +98,8 @@ const randomizeFeatures = (attribute: string) => {
         class="arrow cursor-pointer right"
         data-avatar-index="1"
         @click="randomizeFeatures('eye')"
-      /><div
+      />
+      <div
         class="arrow cursor-pointer right"
         data-avatar-index="2"
         @click="randomizeFeatures('mouth')"
@@ -107,34 +109,40 @@ const randomizeFeatures = (attribute: string) => {
 </template>
 <style scoped>
 .arrows.left .arrow {
-    background-position: 0 0;
+  background-position: 0 0;
 }
+
 .arrows.right {
   transform: rotateY(180deg);
 }
+
 .arrows .arrow {
-    flex: 0 0 auto;
-    width: 25px;
-    height: 25px;
-    background-image: url('/assets/avatar/arrow.png');
-    background-repeat: no-repeat;
+  flex: 0 0 auto;
+  width: 25px;
+  height: 25px;
+  background-image: url('/assets/avatar/arrow.png');
+  background-repeat: no-repeat;
 }
+
 .avatar {
   width: 100px;
   height: 100px;
   background-color: #ffe0bd;
   border-radius: 50%;
 }
+
 .eye {
   width: 70px;
   height: 50px;
   top: 10px;
   left: 10px;
 }
+
 .mouth {
   width: 60px;
   height: 40px;
   top: 54px;
-  right: 15px;;
+  right: 15px;
+  ;
 }
 </style>

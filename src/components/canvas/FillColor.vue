@@ -8,10 +8,13 @@
 </template>
 <style scoped>
 .icon-square {
-    width: 42px; /* Width of the square */
-    height: 42px; /* Height of the square */
+  width: 42px;
+  /* Width of the square */
+  height: 42px;
+  /* Height of the square */
 }
-.bucket-icon {  
+
+.bucket-icon {
   width: 24px;
   height: 24px;
 }

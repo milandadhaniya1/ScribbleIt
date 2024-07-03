@@ -15,5 +15,5 @@ const selectedWord = computed(() => {
     <div class="bg-neutral text-neutral-content rounded-full">
       <span class="text-xs">{{ selectedWord }}</span>
     </div>
-  </div> 
+  </div>
 </template>
