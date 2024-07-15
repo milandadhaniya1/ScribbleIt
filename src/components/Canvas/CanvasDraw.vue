@@ -1,18 +1,13 @@
 <script setup lang="ts">
-interface Props {
-  selectedColor?: string,
-  backgroundColor: string,
-  strokeSize: number,
-  eraserMode: boolean,
-  clearMode: boolean,
-  selectedTool: string
-}
-
-const props = defineProps<Props>();
 import { ref, onMounted, computed, watch } from 'vue';
 import { useDrawingStore } from '@store/drawing';
 import { useUsersStore } from '@store/user';
 import { socket } from "@src/socket";
+import { useGameStore } from '@store/game';
+import { storeToRefs } from 'pinia';
+
+const gameStore = useGameStore();
+const { selectedColor, backgroundColor, selectedTool, strokeSize, clearCanvas } = storeToRefs(gameStore);
 
 const drawingStore = useDrawingStore();
 const usersStore = useUsersStore();
@@ -29,7 +24,7 @@ const canvasWidth = ref();
 const startDrawing = (event: MouseEvent) => {
   if (!context) return;
   isDrawing.value = true;
-  if (context && props.selectedTool === 'pencil') {
+  if (context && selectedTool.value === 'pencil') {
     lastPos.value.x = event.offsetX;
     lastPos.value.y = event.offsetY;
     context.beginPath();
@@ -41,14 +36,14 @@ const startDrawing = (event: MouseEvent) => {
 const draw = (event: MouseEvent) => {
   if (!isDrawing.value || !context) return;
   const currentPos = { x: event.offsetX, y: event.offsetY };
-  if (props.selectedTool === 'bucket') {
-    fillArea(event.offsetX, event.offsetY, props.backgroundColor);
+  if (selectedTool.value === 'bucket') {
+    fillArea(event.offsetX, event.offsetY, backgroundColor.value);
   } else {
-    context.lineWidth = props.selectedTool === 'eraser' ? eraserSize : props.strokeSize;
-    context.strokeStyle = props.selectedTool === 'eraser' ? 'white' : props.selectedColor;
+    context.lineWidth = selectedTool.value === 'eraser' ? eraserSize : strokeSize.value;
+    context.strokeStyle = selectedTool.value === 'eraser' ? 'white' : selectedColor.value;
     context.lineCap = "round";
     context.lineJoin = "round";
-    if (props.selectedTool === 'eraser') {
+    if (selectedTool.value === 'eraser') {
       const rect = canvas?.value.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
@@ -60,14 +55,14 @@ const draw = (event: MouseEvent) => {
       context.stroke();
     }
   }
-  const color = (props.selectedTool === 'bucket' ? props.backgroundColor : props.selectedColor) || '#000000';
-  const size = props.selectedTool === 'eraser' ? eraserSize : props.strokeSize;
+  const color = (selectedTool.value === 'bucket' ? backgroundColor.value : selectedColor.value) || '#000000';
+  const size = selectedTool.value === 'eraser' ? eraserSize : strokeSize.value;
   const drawingData = {
     startX: lastPos.value.x,
     startY: lastPos.value.y,
     endX: currentPos.x,
     endY: currentPos.y,
-    type: props.selectedTool,
+    type: selectedTool.value,
     color,
     size
   };
@@ -169,7 +164,7 @@ onMounted(() => {
 });
 
 
-watch(() => props.clearMode, (newVal) => {
+watch(() => clearCanvas.value, (newVal) => {
   if (newVal === true && canvas.value) {
     context = canvas.value.getContext('2d');
     if (context) {

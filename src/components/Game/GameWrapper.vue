@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// import { storeToRefs } from 'pinia';
+import { storeToRefs } from 'pinia';
 import CanvasDraw from '@src/components/Canvas/CanvasDraw.vue';
 import ColorPalette from '@src/components/Canvas/ColorPalette.vue';
 import SelectedColors from '@src/components/Canvas/SelectedColors.vue';
@@ -9,75 +9,39 @@ import PencilStrokeSizeSelector from '@src/components/Canvas/PencilStrokeSizeSel
 import FillColor from '@src/components/Canvas/FillColor.vue';
 import ClearCanva from '@src/components/Canvas/ClearCanvas.vue';
 import { useGameStore } from '@store/game';
-import { ref } from 'vue';
 
 const gameStore = useGameStore();
+const { selectedColor, avaiableColors, backgroundColor, selectedTool, strokeSize, clearCanvas } = storeToRefs(gameStore);
 
-const colors = ref<string[]>([
-      '#FF0000', '#FF6666', '#FF9999', '#FFCCCC',
-      '#00FF00', '#66FF66', '#99FF99', '#CCFFCC',
-      '#0000FF', '#6666FF', '#9999FF', '#CCCCFF',
-      '#FFFF00', '#FFFF66', '#FFFF99', '#FFFFCC',
-      '#FF00FF', '#FF66FF', '#FF99FF', '#FFCCFF',
-      '#00FFFF', '#66FFFF', '#99FFFF', '#CCFFFF',
-      '#000000', '#333333', '#666666', '#999999',
-      '#CCCCCC', '#FFFFFF'
-    ]);
-const selectedColor = ref<string>('#000000');
-const backgroundColor = ref('#FFFFFF');
-const strokeSize = ref(2);
-const eraser = ref(false);
-const clearCanvas = ref(false);
-const selectedTool = ref('pencil');
+
 // const { selectedWord } = storeToRefs(gameStore);
 
 const randomWords = gameStore.getRandomWords();
 gameStore.selectWord(randomWords[0]);
 
 const updateSelectedColor = (color: string) => {
-  if(selectedTool.value === 'bucket') {
-    backgroundColor.value = color;
-  } else {
-    selectedColor.value = color; 
-  }     
+ gameStore.updateSelectedColor(color);  
 };
 
 const reverseColor = () => {
-  const temp = backgroundColor.value;
-  backgroundColor.value = selectedColor.value;
-  selectedColor.value = temp;
+gameStore.reverseSelectedColor();
 };
 
 const changeStrokeSize = (size: number) => {
-  strokeSize.value = size;
+  gameStore.setStrokeSize(size);
 };
-
-const changeToeraseMode = (flag:boolean) =>{
-  eraser.value = flag;
-};
-
 const clearAll = (flag:boolean) => {
-  clearCanvas.value = flag;  
-  selectedTool.value = 'pencil';
-  selectedColor.value ="#000000";
-  backgroundColor.value = "#FFFFFF";
+  gameStore.clearAll(flag);
 };
 
 const selectTools = (value:string) => {
-  selectedTool.value = value;
+  gameStore.setSelectedTool(value);
 };
 </script>
 
 <template>
   <div class="w-full h-full">
-    <canvas-draw
-      :selected-color="selectedColor"
-      :background-color="backgroundColor"
-      :stroke-size="strokeSize"
-      :eraser-mode="eraser"
-      :clear-mode="clearCanvas"
-      :selected-tool="selectedTool"
-    />
+    <canvas-draw />
   </div>
   <div class="flex gap-2 align-items-center mt-4 mb-1">
     <selected-colors
@@ -86,7 +50,7 @@ const selectTools = (value:string) => {
       @reverse-color="reverseColor"
     />
     <color-palette
-      :colors="colors"
+      :colors="avaiableColors"
       class="w-2/4"
       @color-selected="updateSelectedColor"
     />
@@ -103,7 +67,6 @@ const selectTools = (value:string) => {
     <eraser-selector
       :class="{'active' : selectedTool === 'eraser'}"
       @click="selectTools('eraser')"
-      @eraser-mode="changeToeraseMode"
     />
     <pencil-stroke-size-selector
       class="cursor-pointer"
