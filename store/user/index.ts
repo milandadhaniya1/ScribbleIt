@@ -39,7 +39,6 @@ export const useUsersStore = defineStore('UsersStore', () => {
     };
 
     allUsers.value.currentUser = newUser;
-    allUsers.value.list.push(newUser);
     socket.emit("user:create", newUser);
   };
 
