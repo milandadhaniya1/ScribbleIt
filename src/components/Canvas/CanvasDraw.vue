@@ -273,8 +273,17 @@ const setColorAtPixel = (data: Uint8ClampedArray, index: number, fillColor: [num
 </script>
 
 <template>
-  <div ref="container" class="canvas-container">
-    <canvas ref="canvas" @mousedown="startDrawing" @mouseup="stopDrawing" @mousemove="draw" />
+  <div
+    ref="container"
+    class="canvas-container"
+  >
+    <canvas
+      ref="canvas"
+      @mousedown="startDrawing"
+      @mouseup="stopDrawing"
+      @mousemove="draw"
+      @click="draw"
+    />
   </div>
 </template>
 
