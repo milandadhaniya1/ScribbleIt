@@ -54,7 +54,7 @@ const handleSend = (data: any) => {
       <h1 class="custom-animated-text text-5xl mb-6">
         Scribbl It..
       </h1>
-      <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+      <div class="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
         <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
           <form
             class="space-y-4 md:space-y-6"
@@ -67,7 +67,7 @@ const handleSend = (data: any) => {
                 type="text"
                 name="username"
                 placeholder="Enter Your Name"
-                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                 required="true"
               >
             </div>
