@@ -29,9 +29,7 @@ const handleSave = (data: any) => {
     class="flex justify-center"
   >
     <div class="default">
-      <generate-by-name
-        :name="props.name"
-      />
+      <generate-by-name :name="props.name" />
     </div>
   </div>
   <div

@@ -30,7 +30,7 @@ const setUserName = () => {
       data: avatarData.value
     };
     usersStore.setUserLocalData('name', username.value);
-   
+    usersStore.setUserLocalData('avatar', avatar);
     usersStore.addUser(
       username.value,
       avatar

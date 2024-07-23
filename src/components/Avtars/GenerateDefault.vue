@@ -1,11 +1,11 @@
 ﻿<script setup lang="ts">
 interface Props {
   user?: any,
-  name?:string,
+  name?: string,
   isIcon?: boolean
-  }
+}
 
-const props = defineProps<Props>();  
+const props = defineProps<Props>();
 import { generateFromString } from 'generate-avatar';
 import { ref } from 'vue';
 import { onMounted } from 'vue';
@@ -17,7 +17,7 @@ const emit = defineEmits<{
 
 
 onMounted(() => {
-  if(!props.isIcon) {
+  if (!props.isIcon) {
     radomURL();
   } else {
     randomSrc.value = props.user.avatar.data;
@@ -25,7 +25,7 @@ onMounted(() => {
 });
 
 const radomURL = () => {
-  randomSrc.value = `data:image/svg+xml;utf8,${generateFromString((props.name || 't') + Date.now() )}`;
+  randomSrc.value = `data:image/svg+xml;utf8,${generateFromString((props.name || 't') + Date.now())}`;
   emit('send-data', randomSrc.value);
 };
 </script>
