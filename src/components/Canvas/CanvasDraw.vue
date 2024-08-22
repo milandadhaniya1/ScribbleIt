@@ -24,13 +24,13 @@ const canvasWidth = ref();
 const startDrawing = (event: MouseEvent) => {
   if (!context) return;
   isDrawing.value = true;
-  if (context && selectedTool.value === 'pencil') {
-    lastPos.value.x = event.offsetX;
-    lastPos.value.y = event.offsetY;
-    context.beginPath();
-    context.moveTo(event.clientX, event.clientY);
-  }
+  const currentPos = { x: event.offsetX, y: event.offsetY };
+  lastPos.value = currentPos; // Set initial position when starting
 
+  if (context && selectedTool.value === 'pencil') {
+    context.beginPath();
+    context.moveTo(currentPos.x, currentPos.y);
+  }
 };
 
 const draw = (event: MouseEvent) => {
@@ -75,6 +75,7 @@ const stopDrawing = () => {
   if (!context) return;
   if (isDrawing.value) {
     isDrawing.value = false;
+    lastPos.value = { x: 0, y: 0 };  // Reset position when drawing stops
   }
   context.beginPath();
 };
